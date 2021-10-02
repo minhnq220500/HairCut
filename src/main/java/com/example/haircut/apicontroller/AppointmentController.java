@@ -20,7 +20,7 @@ public class AppointmentController {
     // create
     // post
     // request body dùng khi tạo mới thông tin
-    @PostMapping("/appointments")
+    @PostMapping("/createAppointment")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd){
         try {
             Appointment appointment = appointmentRepository.save(appointmentCanAdd);

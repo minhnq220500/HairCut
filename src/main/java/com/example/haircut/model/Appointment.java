@@ -11,8 +11,6 @@ public class Appointment {
 
     @Id
 //xác định thuộc tính hiện tại là ID trong bảng CSDL.
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-// xác định kiểu sinh khóa chính, ở đây là AUTO_INCREMENT
     private String id;
 
     private String apptID;

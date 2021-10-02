@@ -4,19 +4,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "AppointmentDetail")
 public class AppointmentDetail {
+
     private String detailID;
     private String apptID;
-    private String cusEmail;
+    private String empEmail;
     private String serviceID;
     private double price;
 
     public AppointmentDetail() {
     }
 
-    public AppointmentDetail(String detailID, String apptID, String cusEmail, String serviceID, double price) {
+    public AppointmentDetail(String detailID, String apptID, String empEmail, String serviceID, double price) {
         this.detailID = detailID;
         this.apptID = apptID;
-        this.cusEmail = cusEmail;
+        this.empEmail = empEmail;
         this.serviceID = serviceID;
         this.price = price;
     }
@@ -37,12 +38,12 @@ public class AppointmentDetail {
         this.apptID = apptID;
     }
 
-    public String getCusEmail() {
-        return cusEmail;
+    public String getEmpEmail() {
+        return empEmail;
     }
 
-    public void setCusEmail(String cusEmail) {
-        this.cusEmail = cusEmail;
+    public void setEmpEmail(String empEmail) {
+        this.empEmail = empEmail;
     }
 
     public String getServiceID() {

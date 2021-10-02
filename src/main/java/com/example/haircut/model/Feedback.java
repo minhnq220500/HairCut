@@ -7,17 +7,17 @@ public class Feedback {
     private String feedbackID;
     private String rating;
     private String comment;
-    private String email;
+    private String cusEmail;
     private String apptID;
 
     public Feedback() {
     }
 
-    public Feedback(String feedbackID, String rating, String comment, String email, String apptID) {
+    public Feedback(String feedbackID, String rating, String comment, String cusEmail, String apptID) {
         this.feedbackID = feedbackID;
         this.rating = rating;
         this.comment = comment;
-        this.email = email;
+        this.cusEmail = cusEmail;
         this.apptID = apptID;
     }
 
@@ -45,12 +45,12 @@ public class Feedback {
         this.comment = comment;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCusEmail() {
+        return cusEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCusEmail(String cusEmail) {
+        this.cusEmail = cusEmail;
     }
 
     public String getApptID() {

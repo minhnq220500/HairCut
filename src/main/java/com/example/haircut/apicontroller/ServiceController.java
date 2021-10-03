@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("api/service")
 @RestController
@@ -23,6 +24,22 @@ public class ServiceController {
         try {
             List<Service> services = new ArrayList<>();
             serviceRepository.findAll().forEach(services::add);
+
+
+            if (services != null) {
+                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("available")
+    public ResponseEntity<List<Service>> getAllServiceAvailable() {
+        try {
+            List<Service> services = new ArrayList<>();
+            serviceRepository.findByStatus(true).forEach(services::add);
 
 
             if (services != null) {
@@ -55,11 +72,54 @@ public class ServiceController {
     public ResponseEntity<Service> updateService(@RequestBody Service service) {
         try {
 
-//            Optional<Service>
-            return new ResponseEntity<>(service, HttpStatus.OK);
+            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            if(serviceData != null){
+                serviceData.setServiceName(service.getServiceName());
+                serviceData.setPrice(service.getPrice());
+                serviceData.setDurationTime(service.getDurationTime());
+                serviceRepository.save(serviceData);
+
+                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("delete")
+    public ResponseEntity<Service> deleteService(@RequestBody Service service){
+        try {
+            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            if(serviceData != null){
+                serviceData.setStatus(false);
+                serviceRepository.save(serviceData);
+                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PostMapping("restore")
+    public ResponseEntity<Service> restoreService(@RequestBody Service service){
+        try {
+            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            if(serviceData != null){
+                serviceData.setStatus(true);
+                serviceRepository.save(serviceData);
+                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping("test")

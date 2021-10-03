@@ -1,24 +1,37 @@
 package com.example.haircut.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "Service")
 public class Service {
+    @Id
+    private String id;
+
     private String serviceID;
     private String serviceName;
     private double price;
-    private String status;
+    private boolean status;
     private String durationTime;
 
     public Service() {
     }
 
-    public Service(String serviceID, String serviceName, double price, String status, String durationTime) {
+    public Service(String id, String serviceID, String serviceName, double price, boolean status, String durationTime) {
+        this.id = id;
         this.serviceID = serviceID;
         this.serviceName = serviceName;
         this.price = price;
         this.status = status;
         this.durationTime = durationTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getServiceID() {
@@ -45,11 +58,11 @@ public class Service {
         this.price = price;
     }
 
-    public String getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

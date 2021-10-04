@@ -35,6 +35,7 @@ public class ServiceController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("available")
     public ResponseEntity<List<Service>> getAllServiceAvailable() {
         try {
@@ -52,12 +53,27 @@ public class ServiceController {
         }
     }
 
+    @PostMapping("find")
+    public ResponseEntity<Service> findServiceByServiceId(@RequestBody Service service){
+        try {
+            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            if(serviceData != null){
+                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     @PostMapping("create")
     public ResponseEntity<Service> createService(@RequestBody Service service) {
         try {
             Service currentMaxService = serviceRepository.findAll(Sort.by(Sort.Direction.DESC, "serviceID")).get(0);
             String currentMaxId = currentMaxService.getServiceID();
-            String newId = new MyUtil().getAutoIncreasementId(currentMaxId);
+            String newId = new MyUtil().autoIncrementId(currentMaxId);
             service.setServiceID(newId);
             service.setStatus(true);
             serviceRepository.save(service);

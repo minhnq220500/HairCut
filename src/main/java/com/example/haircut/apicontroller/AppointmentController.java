@@ -40,7 +40,6 @@ public class AppointmentController {
             if (listAppt.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-
             return new ResponseEntity<>(listAppt, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,8 +56,6 @@ public class AppointmentController {
             appointmentCanTim=appointmentRepository.findAppointmentByCusEmail(cusEmail);
         else
             appointmentCanTim=appointmentRepository.findAppointmentByApptID(apptID);
-
-
         if (appointmentCanTim.isPresent()) {
             return new ResponseEntity<>(appointmentCanTim.get(), HttpStatus.OK);
         } else {
@@ -86,7 +83,6 @@ public class AppointmentController {
         if (appointmentCanUpdateData.isPresent()) {
             Appointment appointmentSeLuuVaoDatabase=appointmentCanUpdateData.get();// lấy data của cái trên
             appointmentSeLuuVaoDatabase.setStatus(status);
-
             return new ResponseEntity<>(appointmentRepository.save(appointmentSeLuuVaoDatabase), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

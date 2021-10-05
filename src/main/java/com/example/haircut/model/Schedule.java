@@ -7,16 +7,14 @@ import java.util.Date;
 @Document(collection = "Schedule")
 public class Schedule {
     private String scheduleID;
-    private Date date;
     private Date startTime;
     private Date endTime;
 
     public Schedule() {
     }
 
-    public Schedule(String scheduleID, Date date, Date startTime, Date endTime) {
+    public Schedule(String scheduleID, Date startTime, Date endTime) {
         this.scheduleID = scheduleID;
-        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -27,14 +25,6 @@ public class Schedule {
 
     public void setScheduleID(String scheduleID) {
         this.scheduleID = scheduleID;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public Date getStartTime() {

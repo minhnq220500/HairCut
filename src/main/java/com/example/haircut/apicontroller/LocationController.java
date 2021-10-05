@@ -20,7 +20,7 @@ public class LocationController {
     // create
     // post
     // request body dùng khi tạo mới thông tin
-    @PostMapping("/createAppointment")
+    @PostMapping("/createLocation")
     public ResponseEntity<Location> createAppointment(@RequestBody Location locationCanAdd){
         try {
             Location location = locationRepository.save(locationCanAdd);

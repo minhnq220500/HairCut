@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/apptdetail")
+@RequestMapping("api")
 public class AppointmentDetailController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class AppointmentDetailController {
     @Autowired
     ServiceRepository serviceRepository;
 
-    @PostMapping("")
+    @PostMapping("/appointmentDetails")
     public ResponseEntity<List<AppointmentDetail>> getDetailByAppointmentId(@RequestBody AppointmentDetail apptDetail){
 
         try{
@@ -47,7 +47,7 @@ public class AppointmentDetailController {
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/updateAppointmentDetail")
     public ResponseEntity<AppointmentDetail> updateDetail(@RequestBody AppointmentDetail apptDetail){
         try{
             Optional<AppointmentDetail> detail = appointmentDetailRepository.findByDetailID(apptDetail.getDetailID());

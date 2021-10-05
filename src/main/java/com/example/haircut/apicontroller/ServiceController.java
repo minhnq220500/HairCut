@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("api/service")
+@RequestMapping("/api")
 @RestController
 public class ServiceController {
     @Autowired
     ServiceRepository serviceRepository;
 
-    @GetMapping("")
+    @GetMapping("/services")
     public ResponseEntity<List<Service>> getAllService() {
         try {
             List<Service> services = new ArrayList<>();
@@ -36,7 +36,7 @@ public class ServiceController {
         }
     }
 
-    @GetMapping("available")
+    @GetMapping("/availableServices")
     public ResponseEntity<List<Service>> getAllServiceAvailable() {
         try {
             List<Service> services = new ArrayList<>();
@@ -53,7 +53,7 @@ public class ServiceController {
         }
     }
 
-    @PostMapping("find")
+    @PostMapping("/findService")
     public ResponseEntity<Service> findServiceByServiceId(@RequestBody Service service){
         try {
             Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
@@ -68,7 +68,7 @@ public class ServiceController {
 
     }
 
-    @PostMapping("create")
+    @PostMapping("/createService")
     public ResponseEntity<Service> createService(@RequestBody Service service) {
         try {
             Service currentMaxService = serviceRepository.findAll(Sort.by(Sort.Direction.DESC, "serviceID")).get(0);
@@ -84,7 +84,7 @@ public class ServiceController {
         }
     }
 
-    @PostMapping("update")
+    @PutMapping("/updateService")
     public ResponseEntity<Service> updateService(@RequestBody Service service) {
         try {
 
@@ -104,7 +104,7 @@ public class ServiceController {
         }
     }
 
-    @PostMapping("delete")
+    @PostMapping("/deleteService")
     public ResponseEntity<Service> deleteService(@RequestBody Service service){
         try {
             Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
@@ -121,7 +121,7 @@ public class ServiceController {
 
     }
 
-    @PostMapping("restore")
+    @PostMapping("/restoreService")
     public ResponseEntity<Service> restoreService(@RequestBody Service service){
         try {
             Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
@@ -138,7 +138,7 @@ public class ServiceController {
 
     }
 
-    @PostMapping("test")
+    @PostMapping("/test")
     public ResponseEntity<String> getTest(@RequestBody String search) {
         System.out.println(search);
         return new ResponseEntity<>(search, HttpStatus.OK);

@@ -1,9 +1,13 @@
 package com.example.haircut.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "AppointmentDetail")
 public class AppointmentDetail {
+
+    @Id
+    private String id;
 
     private String detailID;
     private String apptID;
@@ -14,12 +18,21 @@ public class AppointmentDetail {
     public AppointmentDetail() {
     }
 
-    public AppointmentDetail(String detailID, String apptID, String empEmail, String serviceID, double price) {
+    public AppointmentDetail(String id, String detailID, String apptID, String empEmail, String serviceID, double price) {
+        this.id = id;
         this.detailID = detailID;
         this.apptID = apptID;
         this.empEmail = empEmail;
         this.serviceID = serviceID;
         this.price = price;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDetailID() {

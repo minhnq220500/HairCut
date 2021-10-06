@@ -1,16 +1,15 @@
 package com.example.haircut.apicontroller;
 
-import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Customer;
 import com.example.haircut.repository.CustomerRepository;
+import com.example.haircut.utils.Email;
+import com.example.haircut.utils.RandomCode;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,6 +31,15 @@ public class CustomerController {
                 String hash = BCrypt.hashpw(customerCanAdd.getPassword(), BCrypt.gensalt(4));
                 customerCanAdd.setPassword(hash);
 
+                RandomCode randomCode=new RandomCode();
+                String verifyCode=randomCode.verifyCode();
+                customerCanAdd.setVerifyCode(verifyCode);
+
+                //send email
+                Email email=new Email();
+                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
+
+                //lần đầu addNew, status sẽ là inactive
                 Customer customerSeLuuVaoDatabase = customerRepository.save(customerCanAdd);
                 return new ResponseEntity<>(customerSeLuuVaoDatabase, HttpStatus.CREATED);
             }
@@ -49,14 +57,23 @@ public class CustomerController {
 
             if (customerCanDangNhap.isPresent()) {
                 Customer customer=customerCanDangNhap.get();
-                String cusPassword=customer.getPassword();
-                //check xem 2 cái đã mã hóa có giống nhau hay không
-                boolean valuate = BCrypt.checkpw(password, cusPassword);
-                if (valuate==true){
-                    return new ResponseEntity<>( customer,HttpStatus.OK);
+                String status=customer.getStatus();
+                if(status.equals("inactive")){
+                    //nếu chưa active thì chuyển sang trang nhập verify code
+                    // nhập sai thì cho nhập lại
+                    // nhập đúng thì quay lại trang login
+                    return new ResponseEntity<>(null,HttpStatus.ALREADY_REPORTED);
                 }
-                else {
-                    return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+                else{
+                    String cusPassword=customer.getPassword();
+                    //check xem 2 cái đã mã hóa có giống nhau hay không
+                    boolean valuate = BCrypt.checkpw(password, cusPassword);
+                    if (valuate==true){
+                        return new ResponseEntity<>( customer,HttpStatus.OK);
+                    }
+                    else {
+                        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+                    }
                 }
             }
             else{

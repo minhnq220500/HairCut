@@ -15,17 +15,36 @@ public class Customer {
     private String password;
     private String cusName;
     private String phone;
-    private boolean status;
+    private String status;
+    private String verifyCode;
 
     public Customer() {
     }
 
-    public Customer(String cusEmail, String password, String cusName, String phone, boolean status) {
+    public Customer(String id, String cusEmail, String password, String cusName, String phone, String status, String verifyCode) {
+        this.id = id;
         this.cusEmail = cusEmail;
         this.password = password;
         this.cusName = cusName;
         this.phone = phone;
         this.status = status;
+        this.verifyCode = verifyCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
     }
 
     public String getId() {
@@ -68,11 +87,4 @@ public class Customer {
         this.phone = phone;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
 }

@@ -13,17 +13,27 @@ public class Service {
     private double price;
     private boolean status;
     private String durationTime;
+    private int discount;
 
     public Service() {
     }
 
-    public Service(String id, String serviceID, String serviceName, double price, boolean status, String durationTime) {
+    public Service(String id, String serviceID, String serviceName, double price, boolean status, String durationTime, int discount) {
         this.id = id;
         this.serviceID = serviceID;
         this.serviceName = serviceName;
         this.price = price;
         this.status = status;
         this.durationTime = durationTime;
+        this.discount = discount;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 
     public String getId() {

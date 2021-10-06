@@ -93,6 +93,7 @@ public class ServiceController {
                 serviceData.setServiceName(service.getServiceName());
                 serviceData.setPrice(service.getPrice());
                 serviceData.setDurationTime(service.getDurationTime());
+                serviceData.setDiscount(service.getDiscount());
                 serviceRepository.save(serviceData);
 
                 return new ResponseEntity<>(serviceData, HttpStatus.OK);

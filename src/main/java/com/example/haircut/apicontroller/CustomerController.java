@@ -36,8 +36,8 @@ public class CustomerController {
                 customerCanAdd.setVerifyCode(verifyCode);
 
                 //send email
-                Email email=new Email();
-                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
+//                Email email=new Email();
+//                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
 
                 //lần đầu addNew, status sẽ là inactive
                 Customer customerSeLuuVaoDatabase = customerRepository.save(customerCanAdd);

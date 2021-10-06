@@ -12,12 +12,12 @@ public class Service {
     private String serviceName;
     private double price;
     private boolean status;
-    private String durationTime;
+    private int durationTime;
 
     public Service() {
     }
 
-    public Service(String id, String serviceID, String serviceName, double price, boolean status, String durationTime) {
+    public Service(String id, String serviceID, String serviceName, double price, boolean status, int durationTime) {
         this.id = id;
         this.serviceID = serviceID;
         this.serviceName = serviceName;
@@ -66,11 +66,11 @@ public class Service {
         this.status = status;
     }
 
-    public String getDurationTime() {
+    public int getDurationTime() {
         return durationTime;
     }
 
-    public void setDurationTime(String durationTime) {
+    public void setDurationTime(int durationTime) {
         this.durationTime = durationTime;
     }
 }

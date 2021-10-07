@@ -64,7 +64,7 @@ public class CustomerController {
                     //nếu chưa active thì chuyển sang trang nhập verify code
                     // nhập sai thì cho nhập lại
                     // nhập đúng thì quay lại trang login
-                    return new ResponseEntity<>(null,HttpStatus.ALREADY_REPORTED);
+                    return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
                 }
                 else{
                     String cusPassword=customer.getPassword();

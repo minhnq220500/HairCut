@@ -24,7 +24,7 @@ public class CustomerController {
             //check xem email có hay chưa
             Optional<Customer> customer = customerRepository.findCustomerByCusEmail(customerCanAdd.getCusEmail());
             if(customer.isPresent()) {
-                return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             else {
                 //mã hóa password rồi mới lưu vào db
@@ -36,8 +36,8 @@ public class CustomerController {
                 customerCanAdd.setVerifyCode(verifyCode);
 
                 //send email
-//                Email email=new Email();
-//                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
+                Email email=new Email();
+                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
 
                 //lần đầu addNew, status sẽ là inactive
                 Customer customerSeLuuVaoDatabase = customerRepository.save(customerCanAdd);

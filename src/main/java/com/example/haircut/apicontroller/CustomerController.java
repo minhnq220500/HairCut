@@ -40,6 +40,8 @@ public class CustomerController {
                 email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
 
                 //lần đầu addNew, status sẽ là inactive
+                customerCanAdd.setStatus("inactive");
+
                 Customer customerSeLuuVaoDatabase = customerRepository.save(customerCanAdd);
                 return new ResponseEntity<>(customerSeLuuVaoDatabase, HttpStatus.CREATED);
             }
@@ -58,7 +60,7 @@ public class CustomerController {
             if (customerCanDangNhap.isPresent()) {
                 Customer customer=customerCanDangNhap.get();
                 String status=customer.getStatus();
-                if(status.equals("inactive")){
+                if(!status.equals("active")){
                     //nếu chưa active thì chuyển sang trang nhập verify code
                     // nhập sai thì cho nhập lại
                     // nhập đúng thì quay lại trang login

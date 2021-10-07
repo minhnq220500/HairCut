@@ -50,6 +50,32 @@ public class CustomerController {
         }
     }
 
+    //nếu login với status inactive thì front sẽ chuyển sang trang nhập verifyCode
+    //rồi gọi api của checkCode để kiểm tra code của customer nhập có đúng không, nếu sai thì cho nhập lại
+    //nhập đúng rồi thì gọi api của updateCustomerStatus để chuyển status thành active
+    @GetMapping("/checkCode")
+    public ResponseEntity<Customer> checkStatus(@RequestParam String cusEmail, String code){
+        try {
+            Optional<Customer> customerCanDangNhap=customerRepository.findCustomerByCusEmail(cusEmail);
+
+            if (customerCanDangNhap.isPresent()) {
+                Customer customer=customerCanDangNhap.get();
+                String verifyCode=customer.getVerifyCode();
+                if(verifyCode.equals(code)){
+                    return new ResponseEntity<>(customer, HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+                }
+            }
+            else{
+                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/updateCustomerStatus")
     public ResponseEntity<Customer> updateCustomer(@RequestParam String cusEmail, String status){
         try {

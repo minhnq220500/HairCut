@@ -56,13 +56,13 @@ public class CustomerController {
     @GetMapping("/checkCode")
     public ResponseEntity<Customer> checkStatus(@RequestParam String cusEmail, String code){
         try {
-            Optional<Customer> customerCanDangNhap=customerRepository.findCustomerByCusEmail(cusEmail);
+            Optional<Customer> customer=customerRepository.findCustomerByCusEmail(cusEmail);
 
-            if (customerCanDangNhap.isPresent()) {
-                Customer customer=customerCanDangNhap.get();
-                String verifyCode=customer.getVerifyCode();
+            if (customer.isPresent()) {
+                Customer customer_=customer.get();
+                String verifyCode=customer_.getVerifyCode();
                 if(verifyCode.equals(code)){
-                    return new ResponseEntity<>(customer, HttpStatus.OK);
+                    return new ResponseEntity<>(customer_, HttpStatus.OK);
                 }else{
                     return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
                 }

@@ -12,7 +12,7 @@ public class Email {
         msg.setTo(email);
 
         msg.setSubject("Verify code from Hair Cut app");
-        msg.setText("Here is your verify code:"+code);
+        msg.setText("Here is your verify code: "+code);
 
         javaMailSender.send(msg);
 

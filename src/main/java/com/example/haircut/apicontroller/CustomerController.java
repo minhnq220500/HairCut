@@ -50,6 +50,23 @@ public class CustomerController {
         }
     }
 
+    @PutMapping("/updateCustomerStatus")
+    public ResponseEntity<Customer> updateCustomer(@RequestParam String cusEmail, String status){
+        try {
+            Optional<Customer> customer = customerRepository.findCustomerByCusEmail(cusEmail);
+            if(customer.isPresent()) {
+                Customer customer_=customer.get();
+                customer_.setStatus(status);
+                return new ResponseEntity<>(customerRepository.save(customer_), HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
+        }
+    }
+
     //login
     // get
     @GetMapping("/customerLogin")
@@ -63,8 +80,8 @@ public class CustomerController {
                 if(!status.equals("active")){
                     //nếu chưa active thì chuyển sang trang nhập verify code
                     // nhập sai thì cho nhập lại
-                    // nhập đúng thì quay lại trang login
-                    return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+                    // nhập đúng thì cập nhật status = active rồi quay lại trang login
+                    return new ResponseEntity<>(customerCanDangNhap.get(),HttpStatus.ALREADY_REPORTED);
                 }
                 else{
                     String cusPassword=customer.getPassword();

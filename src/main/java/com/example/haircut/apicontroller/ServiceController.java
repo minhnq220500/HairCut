@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RequestMapping("/api")
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ServiceController {
     @Autowired
     ServiceRepository serviceRepository;

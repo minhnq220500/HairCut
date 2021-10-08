@@ -35,9 +35,14 @@ public class CustomerController {
                 String verifyCode=randomCode.verifyCode();
                 customerCanAdd.setVerifyCode(verifyCode);
 
-                //send email
-                Email email=new Email();
-                email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
+                try{
+                    //send email
+                    Email email=new Email();
+                    email.sendEmail(customerCanAdd.getCusEmail(),verifyCode);
+                }catch(Exception e){
+                    return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
+                }
+
 
                 //lần đầu addNew, status sẽ là inactive
                 customerCanAdd.setStatus("inactive");

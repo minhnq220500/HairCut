@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RequestMapping("/api")
 @RestController
+@CrossOrigin("http://127.0.0.1:5500")
 public class ServiceController {
     @Autowired
     ServiceRepository serviceRepository;

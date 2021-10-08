@@ -100,8 +100,7 @@ public class CustomerController {
     }
 
     //login
-    // get
-    @GetMapping("/customerLogin")
+    @PostMapping("/customerLogin")
     public ResponseEntity<Customer> login(@RequestParam String cusEmail, String password){
         try {
             Optional<Customer> customerCanDangNhap=customerRepository.findCustomerByCusEmail(cusEmail);

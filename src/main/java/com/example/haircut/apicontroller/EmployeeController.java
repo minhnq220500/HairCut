@@ -22,7 +22,7 @@ public class EmployeeController {
     // get
     //lúc login có cần chọn role admin hay staff không, hay là để chung 1 chỗ?
 
-    @GetMapping("/empLogin")
+    @PostMapping("/empLogin")
     public ResponseEntity<Employee> login(@RequestParam String empEmail, String password){
         try {
             //mã hóa psssword

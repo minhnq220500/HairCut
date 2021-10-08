@@ -20,7 +20,7 @@ public class AppointmentController {
 
     // create
     // post
-    // request body dùng khi tạo mới thông tin
+    // request body dùng khi tạo mới thông tin ok
     @PostMapping("/createAppointment")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd){
         try {

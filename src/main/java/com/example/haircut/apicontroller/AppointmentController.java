@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class AppointmentController {
     @Autowired
     private AppointmentRepository appointmentRepository;

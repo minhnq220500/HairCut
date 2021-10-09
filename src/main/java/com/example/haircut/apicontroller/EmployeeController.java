@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,4 +50,43 @@ public class EmployeeController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/addNewEmployee")
+    public ResponseEntity<Employee> addNewEmployee(@RequestBody Employee employee){
+        try {
+            //mã hóa psssword
+//            String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
+            Optional<Employee> employeeData=employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
+
+            if (employeeData.isPresent()) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            else{
+                //mã hóa password rồi mới lưu vào db
+                String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));
+                employee.setPassword(hash);
+
+                Employee _employee=employeeRepository.save(employee);
+
+                return new ResponseEntity<>(_employee,HttpStatus.CREATED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<List<Employee>> getAllEmployee(){
+        try {
+            List<Employee> listEmp=new ArrayList<>();
+            employeeRepository.findAll().forEach(listEmp::add);
+            if(listEmp.isEmpty()){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(listEmp, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

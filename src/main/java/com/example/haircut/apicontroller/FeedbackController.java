@@ -3,6 +3,7 @@ package com.example.haircut.apicontroller;
 import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Feedback;
 import com.example.haircut.repository.FeedbackRepository;
+import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,8 @@ public class FeedbackController {
         try {
             Feedback feedbackLast=feedbackRepository.findAll(Sort.by(Sort.Direction.DESC, "feedbackID")).get(0);
             String currentMaxId = feedbackLast.getFeedbackID();
-            feedback.setFeedbackID(currentMaxId);
+            String newID=new MyUtil().autoIncrementId(currentMaxId);
+            feedback.setFeedbackID(newID);
 
             Feedback feedbackLuuDatabase = feedbackRepository.save(feedback);
             return new ResponseEntity<>(feedbackLuuDatabase, HttpStatus.CREATED);

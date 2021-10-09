@@ -3,6 +3,7 @@ package com.example.haircut.apicontroller;
 import com.example.haircut.model.Location;
 import com.example.haircut.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,10 @@ public class LocationController {
     @PostMapping("/createLocation")
     public ResponseEntity<Location> createAppointment(@RequestBody Location locationCanAdd){
         try {
+            Location locationLast=locationRepository.findAll(Sort.by(Sort.Direction.DESC, "locationID")).get(0);
+            String currentMaxId = locationLast.getLocationID();
+            locationCanAdd.setLocationID(currentMaxId);
+
             Location location = locationRepository.save(locationCanAdd);
             return new ResponseEntity<>(location, HttpStatus.CREATED);
         } catch (Exception e) {

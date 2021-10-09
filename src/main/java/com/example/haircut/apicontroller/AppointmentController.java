@@ -2,7 +2,9 @@ package com.example.haircut.apicontroller;
 
 import com.example.haircut.model.Appointment;
 import com.example.haircut.repository.AppointmentRepository;
+import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,13 @@ public class AppointmentController {
     @PostMapping("/createAppointment")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd){
         try {
-            Appointment appointment = appointmentRepository.save(appointmentCanAdd);
-            return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+            Appointment appointmentLast=appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
+            String currentMaxId = appointmentLast.getApptID();
+            String newID=new MyUtil().autoIncrementId(currentMaxId);
+            appointmentCanAdd.setApptID(newID);
+            appointmentRepository.save(appointmentCanAdd);
+
+            return new ResponseEntity<>(appointmentCanAdd, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
         }

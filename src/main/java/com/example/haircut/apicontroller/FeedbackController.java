@@ -4,6 +4,7 @@ import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Feedback;
 import com.example.haircut.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,10 @@ public class FeedbackController {
     @PostMapping("/createFeedback")
     public ResponseEntity<Feedback> createFeedback(@RequestBody Feedback feedback){
         try {
+            Feedback feedbackLast=feedbackRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
+            String currentMaxId = feedbackLast.getFeedbackID();
+            feedback.setFeedbackID(currentMaxId);
+
             Feedback feedbackLuuDatabase = feedbackRepository.save(feedback);
             return new ResponseEntity<>(feedbackLuuDatabase, HttpStatus.CREATED);
         } catch (Exception e) {

@@ -15,6 +15,8 @@ public class AppointmentDetail {
     private String serviceID;
     private double price;
 
+    //list service
+
     public AppointmentDetail() {
     }
 

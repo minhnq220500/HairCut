@@ -25,7 +25,7 @@ public class CustomerController {
             //check xem email có hay chưa
             Optional<Customer> customer = customerRepository.findCustomerByCusEmail(customerCanAdd.getCusEmail());
             if(customer.isPresent()) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
             }
             else {
                 //mã hóa password rồi mới lưu vào db
@@ -119,7 +119,7 @@ public class CustomerController {
                     //check xem 2 cái đã mã hóa có giống nhau hay không
                     boolean valuate = BCrypt.checkpw(password, cusPassword);
                     if (valuate==true){
-                        return new ResponseEntity<>( customer,HttpStatus.OK);
+                        return new ResponseEntity<>(customer,HttpStatus.OK);
                     }
                     else {
                         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);

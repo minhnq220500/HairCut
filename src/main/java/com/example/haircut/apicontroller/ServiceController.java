@@ -93,8 +93,10 @@ public class ServiceController {
             if(serviceData != null){
                 serviceData.setServiceName(service.getServiceName());
                 serviceData.setPrice(service.getPrice());
+                serviceData.setStatus(service.isStatus());
                 serviceData.setDurationTime(service.getDurationTime());
                 serviceData.setDiscount(service.getDiscount());
+                serviceData.setCateID(service.getCateID());
                 serviceRepository.save(serviceData);
 
                 return new ResponseEntity<>(serviceData, HttpStatus.OK);
@@ -140,9 +142,20 @@ public class ServiceController {
 
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> getTest(@RequestBody String search) {
-        System.out.println(search);
-        return new ResponseEntity<>(search, HttpStatus.OK);
+    @GetMapping("/serviceByCate/{id}")
+    public ResponseEntity<List<Service>> getListServiceByCategoryId(@PathVariable String id){
+        try{
+            List<Service> services = new ArrayList<>();
+            serviceRepository.findByCateID(id).forEach(services::add);
+
+            if(!services.isEmpty()){
+                return new ResponseEntity<>(services, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }

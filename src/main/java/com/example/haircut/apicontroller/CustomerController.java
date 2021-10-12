@@ -68,9 +68,10 @@ public class CustomerController {
                 Customer customer_=customer.get();
                 String verifyCode=customer_.getVerifyCode();
                 if(verifyCode.equals(code)){
-                    return new ResponseEntity<>(customer_, HttpStatus.OK);
+                    customer_.setStatus("active");
+                    return new ResponseEntity<>(customerRepository.save(customer_), HttpStatus.OK);
                 }else{
-                    return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
                 }
             }
             else{

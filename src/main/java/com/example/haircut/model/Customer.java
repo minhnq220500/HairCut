@@ -6,11 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Customer")
 public class Customer {
 
-//    @Id
+    @Id
     //xác định thuộc tính hiện tại là ID trong bảng CSDL.
 // @GeneratedValue
 // xác định kiểu sinh khóa chính, ở đây là AUTO_INCREMENT
-//    private String id;
+    private String id;
     private String cusEmail;
     private String password;
     private String cusName;

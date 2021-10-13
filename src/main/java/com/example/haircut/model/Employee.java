@@ -1,11 +1,14 @@
 package com.example.haircut.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Document(collection = "Employee")
 public class Employee {
+    @Id
+    private String id;
     private String empEmail;
     private String password;
     private String empName;

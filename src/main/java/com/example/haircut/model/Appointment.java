@@ -12,7 +12,6 @@ public class Appointment {
     @Id
 //xác định thuộc tính hiện tại là ID trong bảng CSDL.
     private String id;
-
     private String apptID;
     private String status;
     private Date date;

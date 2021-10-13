@@ -19,24 +19,22 @@ public class Appointment {
     private String description;
     private String cusEmail;
     private double totalPrice;
+    private int totalDuration;
     private Date startTime;
-    private Date endTime;
 
     public Appointment() {
     }
 
-    public Appointment(String apptID, String status, Date date, String description, String cusEmail, double totalPrice, Date startTime, Date endTime) {
+    public Appointment(String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime) {
         this.apptID = apptID;
         this.status = status;
         this.date = date;
         this.description = description;
         this.cusEmail = cusEmail;
         this.totalPrice = totalPrice;
+        this.totalDuration = totalDuration;
         this.startTime = startTime;
-        this.endTime = endTime;
     }
-
-
 
     public String getApptID() {
         return apptID;
@@ -86,6 +84,14 @@ public class Appointment {
         this.totalPrice = totalPrice;
     }
 
+    public int getTotalDuration() {
+        return totalDuration;
+    }
+
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
+    }
+
     public Date getStartTime() {
         return startTime;
     }
@@ -94,25 +100,4 @@ public class Appointment {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Appointment{" +
-                "apptID='" + apptID + '\'' +
-                ", status='" + status + '\'' +
-                ", date=" + date +
-                ", description='" + description + '\'' +
-                ", cusEmail='" + cusEmail + '\'' +
-                ", totalPrice=" + totalPrice +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
-    }
 }

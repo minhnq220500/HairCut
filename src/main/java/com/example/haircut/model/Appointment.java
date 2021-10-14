@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "Appointment")
 public class Appointment {
@@ -20,6 +21,7 @@ public class Appointment {
     private double totalPrice;
     private int totalDuration;
     private Date startTime;
+    private List<Service> listService;
 
     public Appointment() {
     }

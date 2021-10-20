@@ -17,7 +17,6 @@ public class Employee {
     private String seatNum;
     private boolean status;
     private String scheduleID;
-    private String locationID;
     private Date hireDate;
     private Date dismissDate;
 
@@ -25,8 +24,8 @@ public class Employee {
     }
 
     public Employee(String empEmail, String password, String empName,
-                    String roleID, String phone, String seatNum, boolean status,
-                    String scheduleID, String locationID, Date hireDate, Date dismissDate) {
+                    String roleID, String phone, String seatNum,
+                    boolean status, String scheduleID, Date hireDate, Date dismissDate) {
         this.empEmail = empEmail;
         this.password = password;
         this.empName = empName;
@@ -35,7 +34,6 @@ public class Employee {
         this.seatNum = seatNum;
         this.status = status;
         this.scheduleID = scheduleID;
-        this.locationID = locationID;
         this.hireDate = hireDate;
         this.dismissDate = dismissDate;
     }
@@ -102,14 +100,6 @@ public class Employee {
 
     public void setScheduleID(String scheduleID) {
         this.scheduleID = scheduleID;
-    }
-
-    public String getLocationID() {
-        return locationID;
-    }
-
-    public void setLocationID(String locationID) {
-        this.locationID = locationID;
     }
 
     public Date getHireDate() {

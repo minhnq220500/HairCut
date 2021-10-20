@@ -21,12 +21,14 @@ public class Appointment {
     private double totalPrice;
     private int totalDuration;
     private Date startTime;
+    private String empEmail;
     private List<Service> listService;
 
     public Appointment() {
     }
 
-    public Appointment(String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime) {
+    public Appointment(String id, String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime, String empEmail, List<Service> listService) {
+        this.id = id;
         this.apptID = apptID;
         this.status = status;
         this.date = date;
@@ -35,6 +37,8 @@ public class Appointment {
         this.totalPrice = totalPrice;
         this.totalDuration = totalDuration;
         this.startTime = startTime;
+        this.empEmail = empEmail;
+        this.listService = listService;
     }
 
     public String getApptID() {
@@ -101,4 +105,19 @@ public class Appointment {
         this.startTime = startTime;
     }
 
+    public String getEmpEmail() {
+        return empEmail;
+    }
+
+    public void setEmpEmail(String empEmail) {
+        this.empEmail = empEmail;
+    }
+
+    public List<Service> getListService() {
+        return listService;
+    }
+
+    public void setListService(List<Service> listService) {
+        this.listService = listService;
+    }
 }

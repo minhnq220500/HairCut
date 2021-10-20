@@ -1,7 +1,9 @@
 package com.example.haircut.apicontroller;
 
 import com.example.haircut.model.Appointment;
+import com.example.haircut.model.Service;
 import com.example.haircut.repository.AppointmentRepository;
+import com.example.haircut.repository.ServiceRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.spi.ServiceRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,17 +22,25 @@ import java.util.Optional;
 public class AppointmentController {
     @Autowired
     private AppointmentRepository appointmentRepository;
+    private ServiceRepository serviceRepository;
 
     // create
     // post
     // request body dùng khi tạo mới thông tin ok
     @PostMapping("/createAppointment")
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd){
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd, List<String> listServiceID){
         try {
             Appointment appointmentLast=appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
             String currentMaxId = appointmentLast.getApptID();
             String newID=new MyUtil().autoIncrementId(currentMaxId);
             appointmentCanAdd.setApptID(newID);
+
+            List<Service> listService=new ArrayList<>();
+            for (String serviceID:listServiceID) {
+                Service service=serviceRepository.findByServiceID(serviceID);
+                listService.add(service);
+            }
+            appointmentCanAdd.setListService(listService);
             appointmentRepository.save(appointmentCanAdd);
 
             return new ResponseEntity<>(appointmentCanAdd, HttpStatus.CREATED);

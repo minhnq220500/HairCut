@@ -1,14 +1,8 @@
-package com.example.haircut.model;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.example.haircut.dto;
 
 import java.util.Date;
 
-@Document(collection = "Employee")
-public class Employee {
-    @Id
-    private String id;
+public class LoginResponseDTO {
     private String empEmail;
     private String password;
     private String empName;
@@ -19,12 +13,9 @@ public class Employee {
     private String scheduleID;
     private Date hireDate;
     private Date dismissDate;
-    public Employee() {
-    }
+    private String token;
 
-    public Employee(String empEmail, String password, String empName,
-                    String roleID, String phone, String seatNum,
-                    boolean status, String scheduleID, Date hireDate, Date dismissDate) {
+    public LoginResponseDTO(String empEmail, String password, String empName, String roleID, String phone, String seatNum, boolean status, String scheduleID, Date hireDate, Date dismissDate, String token) {
         this.empEmail = empEmail;
         this.password = password;
         this.empName = empName;
@@ -35,6 +26,7 @@ public class Employee {
         this.scheduleID = scheduleID;
         this.hireDate = hireDate;
         this.dismissDate = dismissDate;
+        this.token = token;
     }
 
     public String getEmpEmail() {
@@ -117,5 +109,11 @@ public class Employee {
         this.dismissDate = dismissDate;
     }
 
+    public String getToken() {
+        return token;
+    }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

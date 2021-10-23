@@ -1,52 +1,36 @@
-package com.example.haircut.model;
+package com.example.haircut.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.example.haircut.model.Customer;
 
-@Document(collection = "Customer")
-public class Customer {
-
-    @Id
-    // xác định thuộc tính hiện tại là ID trong bảng CSDL.
-    // @GeneratedValue
-    // xác định kiểu sinh khóa chính, ở đây là AUTO_INCREMENT
-    private String id;
+public class LoginCustomerDTO {
     private String cusEmail;
     private String password;
     private String cusName;
     private String phone;
     private String status;
     private String verifyCode;
-    private String roleID;
+    private String token;
 
-    public Customer() {
+    public LoginCustomerDTO() {
     }
 
-    public Customer(String cusEmail, String password, String cusName, String phone, String status, String verifyCode,
-            String roleID) {
+    public LoginCustomerDTO(String cusEmail, String password, String cusName, String phone, String status,
+            String verifyCode, String token) {
         this.cusEmail = cusEmail;
         this.password = password;
         this.cusName = cusName;
         this.phone = phone;
         this.status = status;
         this.verifyCode = verifyCode;
-        this.roleID = roleID;
+        this.token = token;
     }
 
-    public String getId() {
-        return id;
+    public String getToken() {
+        return token;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRoleID() {
-        return roleID;
-    }
-
-    public void setRoleID(String roleID) {
-        this.roleID = roleID;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getStatus() {

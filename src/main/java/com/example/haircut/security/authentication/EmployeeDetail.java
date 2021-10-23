@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class EmployeeDetail implements UserDetails{
+public class EmployeeDetail implements UserDetails {
     private Employee employee;
 
     public EmployeeDetail(Employee employee) {

@@ -53,52 +53,49 @@ public class EmployeeController {
 
     @PostMapping("/empLogin")
     public ResponseEntity<LoginResponseDTO> login(@RequestParam String empEmail, String password) {
-        try {
-            // mã hóa psssword
-            // String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
+        // mã hóa psssword
+        // String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(empEmail, password);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(empEmail, password);
 
-            Authentication authenticate = authenticationManager.authenticate(authentication);
+        Authentication authenticate = authenticationManager.authenticate(authentication);
 
-            Employee employeeCanDangNhap = employeeRepository.findEmployeeByEmpEmail(empEmail);
+        Employee employeeCanDangNhap = employeeRepository.findEmployeeByEmpEmail(empEmail);
 
-            if (authenticate.isAuthenticated()) {
-                String token = Jwts.builder().setSubject(authentication.getName())
-                        .claim("authorities", authenticate.getAuthorities()).setIssuedAt(new Date())
-                        .setExpiration(java.sql.Date
-                                .valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
-                        .signWith(secretKey).compact();
-                // nhớ secret key
-                Employee employee = employeeRepository.findEmployeeByEmpEmail(empEmail);
+        if (authenticate.isAuthenticated()) {
+            String token = Jwts.builder().setSubject(authentication.getName())
+                    .claim("authorities", authenticate.getAuthorities()).setIssuedAt(new Date())
+                    .setExpiration(
+                            java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
+                    .signWith(secretKey).compact();
+            // nhớ secret key
+            Employee employee = employeeRepository.findEmployeeByEmpEmail(empEmail);
 
-                LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),
-                        employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
-                        employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(), token);
+            LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),
+                    employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
+                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(), token);
 
-                return ResponseEntity.ok().body(loginResponse);
+            return ResponseEntity.ok().body(loginResponse);
 
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            // if (employeeCanDangNhap!=null) {
-            // String empPassword=employeeCanDangNhap.getPassword();
-            // //check xem 2 cái đã mã hóa có giống nhau hay không
-            // boolean valuate = BCrypt.checkpw(password, empPassword);
-            // if (valuate==true){
-            // return new ResponseEntity<>(employeeCanDangNhap,HttpStatus.OK);
-            // }
-            // else {
-            // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-            // }
-            // }
-            // else{
-            // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-            // }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        // if (employeeCanDangNhap!=null) {
+        // String empPassword=employeeCanDangNhap.getPassword();
+        // //check xem 2 cái đã mã hóa có giống nhau hay không
+        // boolean valuate = BCrypt.checkpw(password, empPassword);
+        // if (valuate==true){
+        // return new ResponseEntity<>(employeeCanDangNhap,HttpStatus.OK);
+        // }
+        // else {
+        // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        // }
+        // }
+        // else{
+        // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        // }
+
     }
 
     @PostMapping("/addNewEmployee")

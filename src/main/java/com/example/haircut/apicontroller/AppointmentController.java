@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.spi.ServiceRegistry;
@@ -28,16 +29,17 @@ public class AppointmentController {
     // post
     // request body dùng khi tạo mới thông tin ok
     @PostMapping("/createAppointment")
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd, List<String> listServiceID){
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd,
+            List<String> listServiceID) {
         try {
-            Appointment appointmentLast=appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
+            Appointment appointmentLast = appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
             String currentMaxId = appointmentLast.getApptID();
-            String newID=new MyUtil().autoIncrementId(currentMaxId);
+            String newID = new MyUtil().autoIncrementId(currentMaxId);
             appointmentCanAdd.setApptID(newID);
 
-            List<Service> listService=new ArrayList<>();
-            for (String serviceID:listServiceID) {
-                Service service=serviceRepository.findByServiceID(serviceID);
+            List<Service> listService = new ArrayList<>();
+            for (String serviceID : listServiceID) {
+                Service service = serviceRepository.findByServiceID(serviceID);
                 listService.add(service);
             }
             appointmentCanAdd.setListService(listService);
@@ -45,14 +47,17 @@ public class AppointmentController {
 
             return new ResponseEntity<>(appointmentCanAdd, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500
         }
     }
 
     // hiện ra tất cả appointment
-    // get
+    // dung de phan quyen bang role
+    @PreAuthorize("hasRole('st')")
+
+    // @PreAuthorize("hasAnyRole('Donator'))
     @GetMapping("/appointments")
-    public ResponseEntity<List<Appointment>> getAllAppointment(){
+    public ResponseEntity<List<Appointment>> getAllAppointment() {
         try {
             List<Appointment> listAppt = new ArrayList<>();
             appointmentRepository.findAll().forEach(listAppt::add);
@@ -66,41 +71,46 @@ public class AppointmentController {
     }
 
     // tìm
-    //lấy ra 1 appointment bằng apptID hoặc bằng cusEmail
+    // lấy ra 1 appointment bằng apptID hoặc bằng cusEmail
     @GetMapping("/appointment")
-    public ResponseEntity<Appointment> getAppointmentByAppointmentId(@RequestParam(required = false) String apptID,String cusEmail) {
-        Optional<Appointment> appointmentCanTim=null;
-    //optional để kiểm tra xem có dữ liệu trong
-        if(apptID==null)
-            appointmentCanTim=appointmentRepository.findAppointmentByCusEmail(cusEmail);
+    public ResponseEntity<Appointment> getAppointmentByAppointmentId(@RequestParam(required = false) String apptID,
+            String cusEmail) {
+        Optional<Appointment> appointmentCanTim = null;
+        // optional để kiểm tra xem có dữ liệu trong
+        if (apptID == null)
+            appointmentCanTim = appointmentRepository.findAppointmentByCusEmail(cusEmail);
         else
-            appointmentCanTim=appointmentRepository.findAppointmentByApptID(apptID);
+            appointmentCanTim = appointmentRepository.findAppointmentByApptID(apptID);
         if (appointmentCanTim.isPresent()) {
             return new ResponseEntity<>(appointmentCanTim.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //lấy ra appointment bằng customer email
-//    @GetMapping("/appointmentCustomerEmail")
-//    public ResponseEntity<Appointment> getAppointmentByCustomerEmail(@RequestParam(required = false) String cusEmail) {
-//        Optional<Appointment> appointmentCanTim = appointmentRepository.findAppointmentByCusEmail(cusEmail);
-//        //optional để kiểm tra xem có dữ liệu trong
-//        if (appointmentCanTim.isPresent()) {
-//            return new ResponseEntity<>(appointmentCanTim.get(), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    // lấy ra appointment bằng customer email
+    // @GetMapping("/appointmentCustomerEmail")
+    // public ResponseEntity<Appointment>
+    // getAppointmentByCustomerEmail(@RequestParam(required = false) String
+    // cusEmail) {
+    // Optional<Appointment> appointmentCanTim =
+    // appointmentRepository.findAppointmentByCusEmail(cusEmail);
+    // //optional để kiểm tra xem có dữ liệu trong
+    // if (appointmentCanTim.isPresent()) {
+    // return new ResponseEntity<>(appointmentCanTim.get(), HttpStatus.OK);
+    // } else {
+    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // }
+    // }
 
-    //update
-    //khi sử dụng request body thì phải cung cấp cho nó đủ thông tin của cái object java đó
+    // update
+    // khi sử dụng request body thì phải cung cấp cho nó đủ thông tin của cái object
+    // java đó
     @PutMapping("/appointment")
-    public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status){
-        Optional<Appointment> appointmentCanUpdateData=appointmentRepository.findAppointmentByApptID(apptID);
+    public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status) {
+        Optional<Appointment> appointmentCanUpdateData = appointmentRepository.findAppointmentByApptID(apptID);
         // xem thử nó có trong database không
         if (appointmentCanUpdateData.isPresent()) {
-            Appointment appointmentSeLuuVaoDatabase=appointmentCanUpdateData.get();// lấy data của cái trên
+            Appointment appointmentSeLuuVaoDatabase = appointmentCanUpdateData.get();// lấy data của cái trên
             appointmentSeLuuVaoDatabase.setStatus(status);
             return new ResponseEntity<>(appointmentRepository.save(appointmentSeLuuVaoDatabase), HttpStatus.OK);
         } else {

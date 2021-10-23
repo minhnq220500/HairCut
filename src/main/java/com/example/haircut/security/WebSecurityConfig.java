@@ -28,8 +28,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    EmployeeRepository employeeRepository;
 
     private final EmployeeService userDetailService;
     private final SecretKey secretKey;
@@ -42,17 +40,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtConfig = jwtConfig;
     }
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilter(new JWTUserEmailPasswordFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JWTTokenVerify(secretKey, jwtConfig), JWTUserEmailPasswordFilter.class)
-                .authorizeRequests().antMatchers("/auth/**").permitAll().anyRequest().authenticated();
+                .authorizeRequests().antMatchers("/api/empLogin", "/api/customerLogin").permitAll().anyRequest()
+                .authenticated();
     }
 
     @Override
@@ -70,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailService);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 

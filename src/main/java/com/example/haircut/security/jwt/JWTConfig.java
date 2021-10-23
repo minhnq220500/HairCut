@@ -6,9 +6,9 @@ import org.springframework.http.HttpHeaders;
 
 @Configuration
 public class JWTConfig {
-    private String secretKey="123456789";
-    private String tokenPrefix="Bearer";
-    private Integer tokenExpirationAfterDays=100;
+    private String secretKey = "securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure";
+    private String tokenPrefix = "Bearer";
+    private Integer tokenExpirationAfterDays = 100;
 
     public JWTConfig() {
     }

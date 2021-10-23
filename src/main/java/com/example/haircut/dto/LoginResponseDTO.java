@@ -15,9 +15,9 @@ public class LoginResponseDTO {
     private Date dismissDate;
     private String token;
 
-    public LoginResponseDTO(String empEmail, String password, String empName, String roleID, String phone, String seatNum, boolean status, String scheduleID, Date hireDate, Date dismissDate, String token) {
+    public LoginResponseDTO(String empEmail, String empName, String roleID, String phone, String seatNum,
+            boolean status, String scheduleID, Date hireDate, Date dismissDate, String token) {
         this.empEmail = empEmail;
-        this.password = password;
         this.empName = empName;
         this.roleID = roleID;
         this.phone = phone;

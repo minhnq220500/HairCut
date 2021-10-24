@@ -21,7 +21,7 @@ public class HairCutApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://127.0.0.1:5500",
-                                "https://haircut-fall-2021.herokuapp.com",
+                                "https://hair-cut.herokuapp.com/",
                                 "http://localhost:8080");
             }
         };

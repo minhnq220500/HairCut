@@ -53,7 +53,7 @@ public class AppointmentController {
 
     // hiện ra tất cả appointment
     // dung de phan quyen bang role
-    @PreAuthorize("hasRole('st')")
+//    @PreAuthorize("hasRole('st')")
 
     // @PreAuthorize("hasAnyRole('Donator'))
     @GetMapping("/appointments")

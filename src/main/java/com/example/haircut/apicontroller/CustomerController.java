@@ -167,7 +167,7 @@ public class CustomerController {
             Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
 
             LoginCustomerDTO loginResponse = new LoginCustomerDTO(customer.getCusEmail(), customer.getPassword(),
-                    customer.getCusName(), customer.getPhone(), customer.getStatus(), customer.getVerifyCode(), token);
+                    customer.getCusName(), customer.getPhone(), customer.getStatus(), customer.getVerifyCode(), "Bearer " + token);
 
             return ResponseEntity.ok().body(loginResponse);
 

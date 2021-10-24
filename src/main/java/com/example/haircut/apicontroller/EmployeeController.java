@@ -73,7 +73,7 @@ public class EmployeeController {
 
             LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),
                     employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
-                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(), token);
+                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(),"Bearer " + token);
 
             return ResponseEntity.ok().body(loginResponse);
 

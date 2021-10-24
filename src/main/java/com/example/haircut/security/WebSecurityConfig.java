@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilter(new JWTUserEmailPasswordFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JWTTokenVerify(secretKey, jwtConfig), JWTUserEmailPasswordFilter.class)
-                .authorizeRequests().antMatchers("/api/empLogin", "/api/customerLogin").permitAll().anyRequest()
+                .authorizeRequests().antMatchers("/api/**").permitAll().anyRequest()
                 .authenticated();
     }
 

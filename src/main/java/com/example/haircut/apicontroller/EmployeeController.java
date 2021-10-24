@@ -1,17 +1,29 @@
 package com.example.haircut.apicontroller;
 
+import com.example.haircut.dto.LoginResponseDTO;
 import com.example.haircut.model.Customer;
 import com.example.haircut.model.Employee;
 import com.example.haircut.repository.EmployeeRepository;
+import com.example.haircut.security.jwt.JWTConfig;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import io.jsonwebtoken.Jwts;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.crypto.SecretKey;
 
 @RestController
 @RequestMapping("/api")
@@ -20,55 +32,89 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
-    //login
+
+    private AuthenticationManager authenticationManager;
+    private JWTConfig jwtConfig;
+    private PasswordEncoder passwordEncoder;
+    private SecretKey secretKey;
+
+    @Autowired
+    public EmployeeController(AuthenticationManager authenticationManager, JWTConfig jwtConfig,
+            PasswordEncoder passwordEncoder, SecretKey secretKey) {
+        this.authenticationManager = authenticationManager;
+        this.jwtConfig = jwtConfig;
+        this.passwordEncoder = passwordEncoder;
+        this.secretKey = secretKey;
+    }
+
+    // login
     // get
-    //lúc login có cần chọn role admin hay staff không, hay là để chung 1 chỗ?
+    // lúc login có cần chọn role admin hay staff không, hay là để chung 1 chỗ?
 
     @PostMapping("/empLogin")
-    public ResponseEntity<Employee> login(@RequestParam String empEmail, String password){
-        try {
-            //mã hóa psssword
-//            String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
-            Optional<Employee> employeeCanDangNhap=employeeRepository.findEmployeeByEmpEmail(empEmail);
+    public ResponseEntity<LoginResponseDTO> login(@RequestParam String empEmail, String password) {
+        // mã hóa psssword
+        // String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
 
-            if (employeeCanDangNhap.isPresent()) {
-                Employee employee=employeeCanDangNhap.get();
-                String empPassword=employee.getPassword();
-                //check xem 2 cái đã mã hóa có giống nhau hay không
-                boolean valuate = BCrypt.checkpw(password, empPassword);
-                if (valuate==true){
-                    return new ResponseEntity<>(employee,HttpStatus.OK);
-                }
-                else {
-                    return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-                }
-            }
-            else{
-                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(empEmail, password);
+
+        Authentication authenticate = authenticationManager.authenticate(authentication);
+
+        Employee employeeCanDangNhap = employeeRepository.findEmployeeByEmpEmail(empEmail);
+
+        if (authenticate.isAuthenticated()) {
+            String token = Jwts.builder().setSubject(authentication.getName())
+                    .claim("authorities", authenticate.getAuthorities()).setIssuedAt(new Date())
+                    .setExpiration(
+                            java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
+                    .signWith(secretKey).compact();
+            // nhớ secret key
+            Employee employee = employeeRepository.findEmployeeByEmpEmail(empEmail);
+
+            LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),
+                    employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
+                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(),"Bearer " + token);
+
+            return ResponseEntity.ok().body(loginResponse);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        // if (employeeCanDangNhap!=null) {
+        // String empPassword=employeeCanDangNhap.getPassword();
+        // //check xem 2 cái đã mã hóa có giống nhau hay không
+        // boolean valuate = BCrypt.checkpw(password, empPassword);
+        // if (valuate==true){
+        // return new ResponseEntity<>(employeeCanDangNhap,HttpStatus.OK);
+        // }
+        // else {
+        // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        // }
+        // }
+        // else{
+        // return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        // }
+
     }
 
     @PostMapping("/addNewEmployee")
-    public ResponseEntity<Employee> addNewEmployee(@RequestBody Employee employee){
+    public ResponseEntity<Employee> addNewEmployee(@RequestBody Employee employee) {
         try {
-            //mã hóa psssword
-//            String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
-            Optional<Employee> employeeData=employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
+            // mã hóa psssword
+            // String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(4));
+            Employee employeeData = employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
 
-            if (employeeData.isPresent()) {
+            if (employeeData != null) {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-            else{
-                //mã hóa password rồi mới lưu vào db
+            } else {
+                // mã hóa password rồi mới lưu vào db
                 String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));
                 employee.setPassword(hash);
 
-                Employee _employee=employeeRepository.save(employee);
+                Employee _employee = employeeRepository.save(employee);
 
-                return new ResponseEntity<>(_employee,HttpStatus.CREATED);
+                return new ResponseEntity<>(_employee, HttpStatus.CREATED);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,11 +122,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<Employee>> getAllEmployee(){
+    public ResponseEntity<List<Employee>> getAllEmployee() {
         try {
-            List<Employee> listEmp=new ArrayList<>();
+            List<Employee> listEmp = new ArrayList<>();
             employeeRepository.findAll().forEach(listEmp::add);
-            if(listEmp.isEmpty()){
+            if (listEmp.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(listEmp, HttpStatus.OK);

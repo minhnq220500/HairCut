@@ -41,7 +41,7 @@ public class CustomerController {
 
     @Autowired
     public CustomerController(AuthenticationManager authenticationManager, JWTConfig jwtConfig,
-            PasswordEncoder passwordEncoder, SecretKey secretKey) {
+                              PasswordEncoder passwordEncoder, SecretKey secretKey) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.passwordEncoder = passwordEncoder;
@@ -110,7 +110,7 @@ public class CustomerController {
         }
     }
 
-    @PutMapping("/updateCustomerStatus")
+    @PutMapping("/updateCustomer")
     public ResponseEntity<Customer> updateCustomer(@RequestParam String cusEmail, String status) {
         try {
             Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
@@ -125,55 +125,102 @@ public class CustomerController {
         }
     }
 
+    @PutMapping("/updateCustomerPassword")
+    public ResponseEntity<Customer> updateCustomerPassword(@RequestParam String cusEmail, String password, String newPassword) {
+        try {
+            Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
+            if (customer != null) {
+                String cusPassword=customer.getPassword();
+                //so sánh 2 password
+                boolean valuate = BCrypt.checkpw(password, cusPassword);
+
+                //nếu check trong database giống mật khẩu thì làm bước tiếp theo
+                if (valuate == true) {
+                    // mã hóa password mới rồi mới lưu vào db
+                    String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt(4));
+                    customer.setPassword(hash);
+
+                    return new ResponseEntity<>(customerRepository.save(customer), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500
+        }
+    }
+
+    //quên password
+
+    @PostMapping("/sendEmail")
+    public ResponseEntity<Customer> sendEmail(@RequestParam String cusEmail) {
+        try {
+
+            Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
+            // check xem email có hay chưa
+            if (customer == null) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            } else {
+
+                RandomCode randomCode = new RandomCode();
+                String verifyCode = randomCode.verifyCode();
+                customer.setVerifyCode(verifyCode);
+
+                try {
+                    // send email
+                    Email email = new Email();
+                    email.sendEmail(customer.getCusEmail(), verifyCode);
+                } catch (Exception e) {
+                    return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
+                }
+
+                Customer customerSeLuuVaoDatabase = customerRepository.save(customer);
+                return new ResponseEntity<>(customerSeLuuVaoDatabase, HttpStatus.CREATED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500
+        }
+    }
+
     // login
     @PostMapping("/customerLogin")
     public ResponseEntity<LoginCustomerDTO> login(@RequestParam String cusEmail, String password) {
-        // Customer customerCanDangNhap =
-        // customerRepository.findCustomerByCusEmail(cusEmail);
+        Customer customerCanDangNhap = customerRepository.findCustomerByCusEmail(cusEmail);
 
-        // if (customerCanDangNhap != null) {
-        // String status = customerCanDangNhap.getStatus();
-        // if (!status.equals("active")) {
-        // // nếu chưa active thì chuyển sang trang nhập verify code
-        // // nhập sai thì cho nhập lại
-        // // nhập đúng thì cập nhật status = active rồi quay lại trang login
-        // return new ResponseEntity<>(customerCanDangNhap,
-        // HttpStatus.ALREADY_REPORTED);
-        // } else {
-        // String cusPassword = customerCanDangNhap.getPassword();
-        // // check xem 2 cái đã mã hóa có giống nhau hay không
-        // boolean valuate = BCrypt.checkpw(password, cusPassword);
-        // if (valuate == true) {
-        // return new ResponseEntity<>(customerCanDangNhap, HttpStatus.OK);
-        // } else {
-        // return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        // }
-        // }
-        // } else {
-        // return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        // }
+        if (customerCanDangNhap != null) {
+            String status = customerCanDangNhap.getStatus();
+            if (!status.equals("active")) {
+                // nếu chưa active thì chuyển sang trang nhập verify code
+                // nhập sai thì cho nhập lại
+                // nhập đúng thì cập nhật status = active rồi quay lại trang login
+                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+            } else {
+                Authentication authentication = new UsernamePasswordAuthenticationToken(cusEmail, password);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(cusEmail, password);
+                Authentication authenticate = authenticationManager.authenticate(authentication);
 
-        Authentication authenticate = authenticationManager.authenticate(authentication);
+                if (authenticate.isAuthenticated()) {
+                    String token = Jwts.builder().setSubject(authentication.getName())
+                            .claim("authorities", authenticate.getAuthorities()).setIssuedAt(new Date())
+                            .setExpiration(
+                                    java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
+                            .signWith(secretKey).compact();
+                    // nhớ secret key
+                    Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
 
-        if (authenticate.isAuthenticated()) {
-            String token = Jwts.builder().setSubject(authentication.getName())
-                    .claim("authorities", authenticate.getAuthorities()).setIssuedAt(new Date())
-                    .setExpiration(
-                            java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
-                    .signWith(secretKey).compact();
-            // nhớ secret key
-            Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
+                    LoginCustomerDTO loginResponse = new LoginCustomerDTO(customer.getCusEmail(), customer.getPassword(),
+                            customer.getCusName(), customer.getPhone(), customer.getStatus(), customer.getVerifyCode(), "Bearer " + token);
 
-            LoginCustomerDTO loginResponse = new LoginCustomerDTO(customer.getCusEmail(), customer.getPassword(),
-                    customer.getCusName(), customer.getPhone(), customer.getStatus(), customer.getVerifyCode(), "Bearer " + token);
+                    return ResponseEntity.ok().body(loginResponse);
 
-            return ResponseEntity.ok().body(loginResponse);
-
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
+            }
         }
-
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

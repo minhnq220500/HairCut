@@ -29,20 +29,20 @@ public class AppointmentController {
     // post
     // request body dùng khi tạo mới thông tin ok
     @PostMapping("/createAppointment")
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd,
-            List<String> listServiceID) {
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd) {
         try {
             Appointment appointmentLast = appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
             String currentMaxId = appointmentLast.getApptID();
             String newID = new MyUtil().autoIncrementId(currentMaxId);
             appointmentCanAdd.setApptID(newID);
 
-            List<Service> listService = new ArrayList<>();
-            for (String serviceID : listServiceID) {
-                Service service = serviceRepository.findByServiceID(serviceID);
-                listService.add(service);
-            }
-            appointmentCanAdd.setListService(listService);
+//            List<Service> listService = new ArrayList<>();
+//            for (String serviceID : listServiceID) {
+//                Service service = serviceRepository.findByServiceID(serviceID);
+//                listService.add(service);
+//            }
+//            appointmentCanAdd.setListService(listService);
+
             appointmentRepository.save(appointmentCanAdd);
 
             return new ResponseEntity<>(appointmentCanAdd, HttpStatus.CREATED);

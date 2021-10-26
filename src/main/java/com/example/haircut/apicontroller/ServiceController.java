@@ -72,7 +72,8 @@ public class ServiceController {
     @PostMapping("/createService")
     public ResponseEntity<Service> createService(@RequestBody Service service) {
         try {
-            Service currentMaxService = serviceRepository.findAll(Sort.by(Sort.Direction.DESC, "serviceID")).get(0);
+            //Service currentMaxService = serviceRepository.findAll(Sort.by(Sort.Direction.DESC, "serviceID")).get(0);
+            Service currentMaxService = serviceRepository.findTopByOrderByIdDesc();
             String currentMaxId = currentMaxService.getServiceID();
             String newId = new MyUtil().autoIncrementId(currentMaxId);
             service.setServiceID(newId);

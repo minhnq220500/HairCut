@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
     Optional<Schedule> findByScheduleID(String id);
+
+    Schedule findTopByOrderByIdDesc();
 }

@@ -42,7 +42,8 @@ public class ScheduleController {
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule){
         try{
 
-            Schedule lastSchedule = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "scheduleID")).get(0);
+            //Schedule lastSchedule = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "scheduleID")).get(0);
+            Schedule lastSchedule = scheduleRepository.findTopByOrderByIdDesc();
             String id = new MyUtil().autoIncrementId(lastSchedule.getScheduleID());
 
             schedule.setScheduleID(id);

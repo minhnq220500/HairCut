@@ -31,7 +31,8 @@ public class AppointmentController {
     @PostMapping("/createAppointment")
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointmentCanAdd) {
         try {
-            Appointment appointmentLast = appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
+            //Appointment appointmentLast = appointmentRepository.findAll(Sort.by(Sort.Direction.DESC, "apptID")).get(0);
+            Appointment appointmentLast = appointmentRepository.findTopByOrderByIdDesc();
             String currentMaxId = appointmentLast.getApptID();
             String newID = new MyUtil().autoIncrementId(currentMaxId);
             appointmentCanAdd.setApptID(newID);

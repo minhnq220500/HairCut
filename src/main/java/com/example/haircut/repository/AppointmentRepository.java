@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface AppointmentRepository extends MongoRepository<Appointment,String> {
     Optional<Appointment> findAppointmentByApptID(String apptID);
     List<Appointment> findAppointmentByCusEmail(String cusEmail);
+
+    Appointment findTopByOrderByIdDesc();
 }
 //Optional<T> mới được giới thiệu trong gói java.util.
 // Nó được sử dụng để kiểm tra xem một biến có giá trị tồn tại giá trị hay không

@@ -25,7 +25,8 @@ public class FeedbackController {
     @PostMapping("/createFeedback")
     public ResponseEntity<Feedback> createFeedback(@RequestBody Feedback feedback){
         try {
-            Feedback feedbackLast=feedbackRepository.findAll(Sort.by(Sort.Direction.DESC, "feedbackID")).get(0);
+            //Feedback feedbackLast=feedbackRepository.findAll(Sort.by(Sort.Direction.DESC, "feedbackID")).get(0);
+            Feedback feedbackLast=feedbackRepository.findTopByOrderByIdDesc();
             String currentMaxId = feedbackLast.getFeedbackID();
             String newID=new MyUtil().autoIncrementId(currentMaxId);
             feedback.setFeedbackID(newID);

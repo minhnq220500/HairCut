@@ -14,12 +14,11 @@ public class Service {
     private boolean status;
     private int durationTime;
     private int discount;
-    private String cateID;
 
     public Service() {
     }
 
-    public Service(String id, String serviceID, String serviceName, double price, boolean status, int durationTime, int discount, String cateID) {
+    public Service(String id, String serviceID, String serviceName, double price, boolean status, int durationTime, int discount) {
         this.id = id;
         this.serviceID = serviceID;
         this.serviceName = serviceName;
@@ -27,7 +26,6 @@ public class Service {
         this.status = status;
         this.durationTime = durationTime;
         this.discount = discount;
-        this.cateID = cateID;
     }
 
     public String getId() {
@@ -84,13 +82,5 @@ public class Service {
 
     public void setDiscount(int discount) {
         this.discount = discount;
-    }
-
-    public String getCateID() {
-        return cateID;
-    }
-
-    public void setCateID(String cateID) {
-        this.cateID = cateID;
     }
 }

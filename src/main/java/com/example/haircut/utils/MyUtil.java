@@ -14,22 +14,11 @@ public class MyUtil {
         try{
             String head;
             String result;
-            if(id.contains("-")){
-                String[] elements = id.split("-");
-                head = elements[0] + "-";
-                int currentMaxId = Integer.parseInt(elements[1]) + 1;
-                result = head + currentMaxId;
-            }else{
-                if(id.contains("schl")){
-                    head = "schl";
-                    int currentMaxId = Integer.parseInt(id.substring(4)) + 1;
-                    result = head + currentMaxId;
-                }else{
-                    head = id.substring(0,1);
-                    int currentMaxId = Integer.parseInt(id.substring(1)) + 1;
-                    result = head + currentMaxId;
-                }
-            }
+            
+            String[] elements = id.split("-");
+            head = elements[0] + "-";
+            int currentMaxId = Integer.parseInt(elements[1]) + 1;
+            result = head + currentMaxId;
 
             return result;
         }catch (Exception e){

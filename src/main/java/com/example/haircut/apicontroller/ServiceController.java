@@ -97,7 +97,7 @@ public class ServiceController {
                 serviceData.setStatus(service.isStatus());
                 serviceData.setDurationTime(service.getDurationTime());
                 serviceData.setDiscount(service.getDiscount());
-                
+
                 serviceRepository.save(serviceData);
 
                 return new ResponseEntity<>(serviceData, HttpStatus.OK);
@@ -143,20 +143,20 @@ public class ServiceController {
 
     }
 
-    @GetMapping("/serviceByCate/{id}")
-    public ResponseEntity<List<Service>> getListServiceByCategoryId(@PathVariable String id){
-        try{
-            List<Service> services = new ArrayList<>();
-            serviceRepository.findByCateID(id).forEach(services::add);
-
-            if(!services.isEmpty()){
-                return new ResponseEntity<>(services, HttpStatus.OK);
-            }
-
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/serviceByCate/{id}")
+//    public ResponseEntity<List<Service>> getListServiceByCategoryId(@PathVariable String id){
+//        try{
+//            List<Service> services = new ArrayList<>();
+//            serviceRepository.findByCateID(id).forEach(services::add);
+//
+//            if(!services.isEmpty()){
+//                return new ResponseEntity<>(services, HttpStatus.OK);
+//            }
+//
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

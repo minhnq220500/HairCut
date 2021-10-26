@@ -97,6 +97,7 @@ public class ServiceController {
                 serviceData.setStatus(service.isStatus());
                 serviceData.setDurationTime(service.getDurationTime());
                 serviceData.setDiscount(service.getDiscount());
+                
                 serviceRepository.save(serviceData);
 
                 return new ResponseEntity<>(serviceData, HttpStatus.OK);

@@ -14,7 +14,7 @@ public class MyUtil {
         try{
             String head;
             String result;
-            
+
             String[] elements = id.split("-");
             head = elements[0] + "-";
             int currentMaxId = Integer.parseInt(elements[1]) + 1;

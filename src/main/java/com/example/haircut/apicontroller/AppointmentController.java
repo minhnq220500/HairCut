@@ -25,7 +25,7 @@ import java.util.Optional;
 public class AppointmentController {
     @Autowired
     private AppointmentRepository appointmentRepository;
-    private ServiceRepository serviceRepository;
+    @Autowired
     private NotificationRepository notificationRepository;
 
     // create
@@ -41,25 +41,24 @@ public class AppointmentController {
             appointmentCanAdd.setApptID(newID);
 
             //tạo ra appoiment, cùng lúc tạo ra notification cho nó
-            Notification notification=notificationRepository.findTopByOrderByIdDesc();
-            String currentMaxNotiId = notification.getNotiID();
-            String newNotiID = new MyUtil().autoIncrementId(currentMaxNotiId);
+            try{
+                Notification notification=notificationRepository.findTopByOrderByIdDesc();
+                String currentMaxNotiId = notification.getNotiID();
+                String newNotiID = new MyUtil().autoIncrementId(currentMaxNotiId);
 
-            String currentStatus="ON PROCESS";
-            String newStatus="DENY";
-            boolean isRead=false;
-            String cusEmail=appointmentCanAdd.getCusEmail();
-//            String apptID=newID;
+                String currentStatus="ON PROCESS";
+                String newStatus="DENY";
+                boolean isRead=false;
+                String cusEmail=appointmentCanAdd.getCusEmail();
+                String apptID=newID;
 
-            Notification notification1=new Notification(newNotiID,currentStatus,newStatus,isRead,cusEmail,newID);
-            notificationRepository.save(notification1);
+                Notification notification1=new Notification(newNotiID,currentStatus,newStatus,isRead,cusEmail,apptID);
+                notificationRepository.save(notification1);
 
-//            List<Service> listService = new ArrayList<>();
-//            for (String serviceID : listServiceID) {
-//                Service service = serviceRepository.findByServiceID(serviceID);
-//                listService.add(service);
-//            }
-//            appointmentCanAdd.setListService(listService);
+            }catch (Exception e){
+                System.out.println(e);
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);// 500
+            }
 
             appointmentRepository.save(appointmentCanAdd);
 
@@ -122,13 +121,22 @@ public class AppointmentController {
     @PutMapping("/updateAppointmentStatus")
     public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status) {
         Optional<Appointment> appointmentCanUpdateData = appointmentRepository.findAppointmentByApptID(apptID);
-        Notification noti=notificationRepository.findNotificationByApptID(apptID);
+
+        Optional<Notification> noti=notificationRepository.findNotificationByApptID(apptID);
         // xem thử nó có trong database không
-        if (appointmentCanUpdateData.isPresent() && noti!=null) {
+        if (appointmentCanUpdateData.isPresent() && noti.isPresent()) {
             Appointment appointmentSeLuuVaoDatabase = appointmentCanUpdateData.get();// lấy data của cái trên
             appointmentSeLuuVaoDatabase.setStatus(status);
-            noti.setNewStatus(status);
-            notificationRepository.save(noti);
+
+            try{
+                Notification notification_=noti.get();
+                notification_.setNewStatus(status);
+                notificationRepository.save(notification_);
+            }catch (Exception e){
+                System.out.println(e);
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            }
+
             return new ResponseEntity<>(appointmentRepository.save(appointmentSeLuuVaoDatabase), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

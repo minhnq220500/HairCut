@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -55,12 +56,12 @@ public class FeedbackController {
         }
     }
 
-    // lấy ra 1 appointment bằng apptID
+    // lấy ra 1 feedback bằng apptID
     @GetMapping("/feedbackApptID")
-    public ResponseEntity<Feedback> getFeedbackByApptID(@RequestParam String apptID) {
-        Optional<Feedback> feedback = feedbackRepository.findFeedbackByApptID(apptID);
-        if (feedback.isPresent()) {
-            return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+    public ResponseEntity<List<Feedback>> getFeedbacktByAppointmentId(@RequestParam String apptID) {
+        List<Feedback> feedback = feedbackRepository.findFeedbackByApptID(apptID);
+        if (feedback!=null) {
+            return new ResponseEntity<>(feedback, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -71,9 +71,12 @@ public class EmployeeController {
             // nhớ secret key
             Employee employee = employeeRepository.findEmployeeByEmpEmail(empEmail);
 
-            LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),
-                    employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
-                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(),"Bearer " + token);
+//            LoginResponseDTO loginResponse = new LoginResponseDTO(employee.getEmpEmail(), employee.getEmpName(),employee.getPassword(),
+//                    employee.getRoleID(), employee.getPhone(), employee.getSeatNum(), employee.isStatus(),
+//                    employee.getScheduleID(), employee.getHireDate(), employee.getDismissDate(),"Bearer " + token);
+            LoginResponseDTO loginResponse= new LoginResponseDTO(employee.getEmpEmail(),employee.getPassword(),employee.getEmpName(),
+                    employee.getRoleID(),employee.getPhone(),employee.getSeatNum(),employee.isStatus(),employee.getScheduleID(),
+                    employee.getHireDate(),employee.getDismissDate(),"Bearer " + token);
 
             return ResponseEntity.ok().body(loginResponse);
 

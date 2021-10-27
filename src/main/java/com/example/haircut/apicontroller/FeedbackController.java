@@ -54,4 +54,15 @@ public class FeedbackController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // lấy ra 1 appointment bằng apptID
+    @GetMapping("/feedbackApptID")
+    public ResponseEntity<Feedback> getFeedbackByApptID(@RequestParam String apptID) {
+        Optional<Feedback> feedback = feedbackRepository.findFeedbackByApptID(apptID);
+        if (feedback.isPresent()) {
+            return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

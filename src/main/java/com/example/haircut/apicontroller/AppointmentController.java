@@ -1,8 +1,10 @@
 package com.example.haircut.apicontroller;
 
 import com.example.haircut.model.Appointment;
+import com.example.haircut.model.Notification;
 import com.example.haircut.model.Service;
 import com.example.haircut.repository.AppointmentRepository;
+import com.example.haircut.repository.NotificationRepository;
 import com.example.haircut.repository.ServiceRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentRepository appointmentRepository;
     private ServiceRepository serviceRepository;
+    private NotificationRepository notificationRepository;
 
     // create
     // post
@@ -36,6 +39,20 @@ public class AppointmentController {
             String currentMaxId = appointmentLast.getApptID();
             String newID = new MyUtil().autoIncrementId(currentMaxId);
             appointmentCanAdd.setApptID(newID);
+
+            //tạo ra appoiment, cùng lúc tạo ra notification cho nó
+            Notification notification=notificationRepository.findTopByOrderByIdDesc();
+            String currentMaxNotiId = notification.getNotiID();
+            String newNotiID = new MyUtil().autoIncrementId(currentMaxNotiId);
+
+            String currentStatus="ON PROCESS";
+            String newStatus="DENY";
+            boolean isRead=false;
+            String cusEmail=appointmentCanAdd.getCusEmail();
+            String apptID=newID;
+
+            Notification notification1=new Notification(newNotiID,currentStatus,newStatus,isRead,cusEmail,apptID);
+            notificationRepository.save(notification1);
 
 //            List<Service> listService = new ArrayList<>();
 //            for (String serviceID : listServiceID) {
@@ -105,10 +122,13 @@ public class AppointmentController {
     @PutMapping("/updateAppointmentStatus")
     public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status) {
         Optional<Appointment> appointmentCanUpdateData = appointmentRepository.findAppointmentByApptID(apptID);
+        Notification noti=notificationRepository.findNotificationByApptID(apptID);
         // xem thử nó có trong database không
-        if (appointmentCanUpdateData.isPresent()) {
+        if (appointmentCanUpdateData.isPresent() && noti!=null) {
             Appointment appointmentSeLuuVaoDatabase = appointmentCanUpdateData.get();// lấy data của cái trên
             appointmentSeLuuVaoDatabase.setStatus(status);
+            noti.setNewStatus(status);
+            notificationRepository.save(noti);
             return new ResponseEntity<>(appointmentRepository.save(appointmentSeLuuVaoDatabase), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

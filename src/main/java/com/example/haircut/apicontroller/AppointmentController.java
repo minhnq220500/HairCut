@@ -49,9 +49,9 @@ public class AppointmentController {
             String newStatus="DENY";
             boolean isRead=false;
             String cusEmail=appointmentCanAdd.getCusEmail();
-            String apptID=newID;
+//            String apptID=newID;
 
-            Notification notification1=new Notification(newNotiID,currentStatus,newStatus,isRead,cusEmail,apptID);
+            Notification notification1=new Notification(newNotiID,currentStatus,newStatus,isRead,cusEmail,newID);
             notificationRepository.save(notification1);
 
 //            List<Service> listService = new ArrayList<>();

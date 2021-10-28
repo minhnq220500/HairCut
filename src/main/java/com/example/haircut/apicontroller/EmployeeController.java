@@ -145,7 +145,7 @@ public class EmployeeController {
             List<Employee> listEmp = new ArrayList<>();
             employeeRepository.findByScheduleID(schedule.getScheduleID()).forEach(listEmp::add);
             if (listEmp.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(listEmp, HttpStatus.OK);
         } catch (Exception e) {

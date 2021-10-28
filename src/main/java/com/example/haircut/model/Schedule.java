@@ -14,15 +14,16 @@ public class Schedule {
     private String scheduleID;
     private Date startTime;
     private Date endTime;
+    private boolean status;
 
     public Schedule() {
     }
 
-    public Schedule(String id, String scheduleID, Date startTime, Date endTime) {
-        this.id = id;
+    public Schedule(String scheduleID, Date startTime, Date endTime, boolean status) {
         this.scheduleID = scheduleID;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = status;
     }
 
     public String getId() {
@@ -55,5 +56,13 @@ public class Schedule {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

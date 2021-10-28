@@ -155,7 +155,7 @@ public class CustomerController {
 
     //quên password
 
-    @PostMapping("/sendEmail")
+    @PostMapping("/forgetPassword")
     public ResponseEntity<Customer> sendEmail(@RequestParam String cusEmail) {
         try {
 

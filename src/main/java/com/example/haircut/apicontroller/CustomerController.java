@@ -155,7 +155,7 @@ public class CustomerController {
 
     //quên password
 
-    @PostMapping("/forgetPassword")
+    @PostMapping("/sendEmail")
     public ResponseEntity<Customer> sendEmail(@RequestParam String cusEmail) {
         try {
 
@@ -179,6 +179,23 @@ public class CustomerController {
 
                 Customer customerSeLuuVaoDatabase = customerRepository.save(customer);
                 return new ResponseEntity<>(customerSeLuuVaoDatabase, HttpStatus.CREATED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500
+        }
+    }
+
+    @PutMapping("/updateForgetPassword")
+    public ResponseEntity<Customer> updateForgetPassword(@RequestParam String cusEmail, String newPassword) {
+        try {
+            Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
+            if (customer != null) {
+                String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt(4));
+                customer.setPassword(hash);
+
+                return new ResponseEntity<>(customerRepository.save(customer), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500

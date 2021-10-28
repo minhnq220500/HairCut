@@ -47,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().addFilter(new JWTUserEmailPasswordFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JWTTokenVerify(secretKey, jwtConfig), JWTUserEmailPasswordFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/empLogin","/api/customerLogin","/api/addNewCustomer","/api/checkCode","/api/sendEmail","/swagger-ui/**")
+                .antMatchers("/api/empLogin","/api/customerLogin","/api/addNewCustomer","/api/checkCode","/api/sendEmail",
+                        "/api/updateForgetPassword","/swagger-ui/**")
                 .permitAll().anyRequest()
                 .authenticated();
     }

@@ -23,12 +23,14 @@ public class Appointment {
     private Date startTime;
     private String empEmail;
     private List<Service> listService;
+    private Date createDate;
 
     public Appointment() {
     }
 
-    public Appointment(String id, String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime, String empEmail, List<Service> listService) {
-        this.id = id;
+    public Appointment(String apptID, String status, Date date, String description,
+                       String cusEmail, double totalPrice, int totalDuration, Date startTime,
+                       String empEmail, List<Service> listService, Date createDate) {
         this.apptID = apptID;
         this.status = status;
         this.date = date;
@@ -39,6 +41,7 @@ public class Appointment {
         this.startTime = startTime;
         this.empEmail = empEmail;
         this.listService = listService;
+        this.createDate = createDate;
     }
 
     public String getApptID() {
@@ -119,5 +122,13 @@ public class Appointment {
 
     public void setListService(List<Service> listService) {
         this.listService = listService;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

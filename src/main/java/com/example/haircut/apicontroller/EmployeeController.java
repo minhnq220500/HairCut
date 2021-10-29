@@ -3,6 +3,7 @@ package com.example.haircut.apicontroller;
 import com.example.haircut.dto.LoginResponseDTO;
 import com.example.haircut.model.Customer;
 import com.example.haircut.model.Employee;
+import com.example.haircut.model.Schedule;
 import com.example.haircut.repository.EmployeeRepository;
 import com.example.haircut.security.jwt.JWTConfig;
 import org.mindrot.jbcrypt.BCrypt;
@@ -131,6 +132,20 @@ public class EmployeeController {
             employeeRepository.findAll().forEach(listEmp::add);
             if (listEmp.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(listEmp, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/employeesBySchedule")
+    public ResponseEntity<List<Employee>> getAllEmployeeBySchedule(@RequestBody Schedule schedule) {
+        try {
+            List<Employee> listEmp = new ArrayList<>();
+            employeeRepository.findByScheduleID(schedule.getScheduleID()).forEach(listEmp::add);
+            if (listEmp.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(listEmp, HttpStatus.OK);
         } catch (Exception e) {

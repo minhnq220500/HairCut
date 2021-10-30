@@ -73,14 +73,19 @@ public class ServiceController {
     public ResponseEntity<Service> createService(@RequestBody Service service) {
         try {
             //Service currentMaxService = serviceRepository.findAll(Sort.by(Sort.Direction.DESC, "serviceID")).get(0);
-            Service currentMaxService = serviceRepository.findTopByOrderByIdDesc();
-            String currentMaxId = currentMaxService.getServiceID();
-            String newId = new MyUtil().autoIncrementId(currentMaxId);
-            service.setServiceID(newId);
-            service.setStatus(true);
-            serviceRepository.save(service);
+            Service service1=serviceRepository.findServiceByServiceName(service.getServiceName());
+            if(service1==null){
+                Service currentMaxService = serviceRepository.findTopByOrderByIdDesc();
+                String currentMaxId = currentMaxService.getServiceID();
+                String newId = new MyUtil().autoIncrementId(currentMaxId);
+                service.setServiceID(newId);
+                service.setStatus(true);
+                serviceRepository.save(service);
 
-            return new ResponseEntity<>(service, HttpStatus.CREATED);
+                return new ResponseEntity<>(service, HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

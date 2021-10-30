@@ -1,9 +1,8 @@
 package com.example.haircut.apicontroller;
 
-import com.example.haircut.model.Appointment;
-import com.example.haircut.model.Notification;
-import com.example.haircut.model.Service;
+import com.example.haircut.model.*;
 import com.example.haircut.repository.AppointmentRepository;
+import com.example.haircut.repository.FeedbackRepository;
 import com.example.haircut.repository.NotificationRepository;
 import com.example.haircut.repository.ServiceRepository;
 import com.example.haircut.utils.MyUtil;
@@ -27,6 +26,9 @@ public class AppointmentController {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    FeedbackRepository feedbackRepository;
 
     // create
     // post
@@ -138,6 +140,24 @@ public class AppointmentController {
             }
 
             return new ResponseEntity<>(appointmentRepository.save(appointmentSeLuuVaoDatabase), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/appointmentCustomApptID")
+    public ResponseEntity<AppointmentCustom> getAppointmentCustomByAppointmentId(@RequestParam String apptID) {
+        Optional<Appointment> appointmentCanTim = appointmentRepository.findAppointmentByApptID(apptID);
+        if (appointmentCanTim.isPresent()) {
+                AppointmentCustom apptCustom = new AppointmentCustom();
+                apptCustom.setAppointment(appointmentCanTim.get());
+
+                List<Feedback> feedbacks = feedbackRepository.findFeedbackByApptID(apptID);
+                if(feedbacks.size() > 0){
+                    apptCustom.setFeedback(feedbacks.get(0));
+                }
+
+            return new ResponseEntity<>(apptCustom, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

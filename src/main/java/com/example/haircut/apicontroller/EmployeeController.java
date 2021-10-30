@@ -153,4 +153,49 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/updateEmployeeInfo")
+    public ResponseEntity<Employee> updateEmployeeInfo(@RequestBody Employee employee){
+        try{
+            Employee employee1=employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
+            if(employee1!=null){
+                employee1.setEmpName(employee.getEmpName());
+                employee1.setPhone(employee.getPhone());
+                employee1.setSeatNum(employee.getSeatNum());
+                employee1.setStatus(employee.isStatus());
+
+                employee1.setScheduleID(employee.getScheduleID());
+
+                employee1.setHireDate(employee.getHireDate());
+                employee1.setDismissDate(employee.getDismissDate());
+
+                return new ResponseEntity<>(employeeRepository.save(employee1), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //cập nhật schedule của list Employee
+    @PutMapping("/updateEmployeeSchedule")
+    public ResponseEntity<Employee> updateEmployeeSchedule(@RequestParam String scheduleID, List<String> listEmployeeEmail){
+        try{
+            if(listEmployeeEmail.size()==0){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                for (String employeeEmail : listEmployeeEmail) {
+                    Employee employee=employeeRepository.findEmployeeByEmpEmail(employeeEmail);
+                    employee.setScheduleID(scheduleID);
+                    employeeRepository.save(employee);
+                }
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }catch (Exception e){
+            System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

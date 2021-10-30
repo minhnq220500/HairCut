@@ -41,7 +41,7 @@ public class FeedbackController {
 
     //update
     //khi sử dụng request body thì phải cung cấp cho nó đủ thông tin của cái object java đó
-    @PutMapping("/feedback")
+    @PutMapping("/updateFeedback")
     public ResponseEntity<Feedback> updateFeedback(@RequestBody Feedback feedback){
         Optional<Feedback> feedbackCanUpdateData=feedbackRepository.findFeedbackByCusEmail(feedback.getCusEmail());
         // xem thử nó có trong database không

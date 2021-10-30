@@ -97,15 +97,20 @@ public class ServiceController {
 
             Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
             if(serviceData != null){
-                serviceData.setServiceName(service.getServiceName());
-                serviceData.setPrice(service.getPrice());
-                serviceData.setStatus(service.isStatus());
-                serviceData.setDurationTime(service.getDurationTime());
-                serviceData.setDiscount(service.getDiscount());
+                Service service1=serviceRepository.findServiceByServiceName(service.getServiceName());
+                if(service1!=null){
+                    return new ResponseEntity<>(serviceData, HttpStatus.ALREADY_REPORTED);
+                }
+                else{
+                    serviceData.setServiceName(service.getServiceName());
+                    serviceData.setPrice(service.getPrice());
+                    serviceData.setStatus(service.isStatus());
+                    serviceData.setDurationTime(service.getDurationTime());
 
-                serviceRepository.save(serviceData);
+                    serviceRepository.save(serviceData);
 
-                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+                    return new ResponseEntity<>(serviceData, HttpStatus.OK);
+                }
             }
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -1,11 +1,15 @@
 package com.example.haircut.apicontroller;
 
 import com.example.haircut.dto.LoginResponseDTO;
+import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Customer;
 import com.example.haircut.model.Employee;
 import com.example.haircut.model.Schedule;
+import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.EmployeeRepository;
+import com.example.haircut.repository.ScheduleRepository;
 import com.example.haircut.security.jwt.JWTConfig;
+import com.example.haircut.utils.DateUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +37,12 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     private AuthenticationManager authenticationManager;
     private JWTConfig jwtConfig;
@@ -216,6 +226,56 @@ public class EmployeeController {
             }
         }catch (Exception e){
             System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/matchingEmployee")
+    public ResponseEntity<List<Employee>> findEmployeeForAppointment(@RequestBody Appointment appt) {
+        DateUtil dateUtil = new DateUtil();
+        List<Employee> employees = employeeRepository.findAll();
+        Optional<Appointment> appointmentData = appointmentRepository.findAppointmentByApptID(appt.getApptID());
+
+        if (employees.size() > 0 && appointmentData.isPresent()) {
+            Appointment _appt = appointmentData.get();
+
+            //GET APPOINTMENT'S DATETIME
+            Date _apptDate = dateUtil.getCompleteDate(_appt.getStartTime(), _appt.getDate());
+
+            //CHECK EMPLOYEE SCHEDULE
+            for (Employee emp : new ArrayList<>(employees)) {
+                Optional<Schedule> scheduleData = scheduleRepository.findByScheduleID(emp.getScheduleID());
+                if (scheduleData.isPresent()) {
+                    Schedule _schedule = scheduleData.get();
+
+                    //CHECK IF EMPLOYEE'S SCHEDULE COVERS APPOINTMENT'S TIME
+                    boolean scheduleValid = dateUtil.employeeScheduleValid(_schedule.getStartTime(),
+                            _schedule.getEndTime(), _apptDate, _appt.getTotalDuration());
+                    if(!scheduleValid){
+                        employees.remove(emp);
+                    }
+
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            }
+
+            for(Employee emp: new ArrayList<>(employees)){
+                List<Appointment> appointments = appointmentRepository.findByEmpEmailAndStatusNotContaining(emp.getEmpEmail(), "CANCEL BY CUSTOMER");
+
+                //REMOVE APPOINTMENT FROM REQUEST BODY
+                appointments = dateUtil.removeAppointment(appointments, appt.getApptID());
+
+                //CHECK IF THERE ARE ANY APPOINTMENT AT THE SAME TIME
+                boolean isAbleForAppointment = dateUtil.employeeAppoinmentValid(appointments,
+                        _apptDate, _appt.getTotalDuration());
+                if(!isAbleForAppointment){
+                    employees.remove(emp);
+                }
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

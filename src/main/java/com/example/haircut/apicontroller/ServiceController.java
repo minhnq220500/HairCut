@@ -131,7 +131,13 @@ public class ServiceController {
 //                }
 
                 List<Service> listService=serviceRepository.findAll();
-                listService.remove(serviceData);
+                System.out.println(listService.size());
+                for(int i=0;i<listService.size();i++){
+                    if(listService.get(i).getServiceName().toUpperCase().trim().equals(serviceData.getServiceName().toUpperCase().trim())){
+                        listService.remove(i);
+                    }
+                }
+                System.out.println(listService.size());
                 //list service đã bỏ thằng đang cập nhật
                 for(Service service1:listService){
                     if(service1.getServiceName().toUpperCase().trim().equals(service.getServiceName().toUpperCase().trim())){

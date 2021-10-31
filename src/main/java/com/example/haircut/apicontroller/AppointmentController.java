@@ -146,18 +146,23 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointmentCustomApptID")
-    public ResponseEntity<AppointmentCustom> getAppointmentCustomByAppointmentId(@RequestParam String apptID) {
-        Optional<Appointment> appointmentCanTim = appointmentRepository.findAppointmentByApptID(apptID);
-        if (appointmentCanTim.isPresent()) {
-                AppointmentCustom apptCustom = new AppointmentCustom();
-                apptCustom.setAppointment(appointmentCanTim.get());
-
-                List<Feedback> feedbacks = feedbackRepository.findFeedbackByApptID(apptID);
-                if(feedbacks.size() > 0){
-                    apptCustom.setFeedback(feedbacks.get(0));
+    public ResponseEntity<List<AppointmentCustom>> getAppointmentCustomByAppointmentId(@RequestParam String cusEmail) {
+        List<Appointment> appointments = new ArrayList<>();
+        List<AppointmentCustom> appointmentCustoms = new ArrayList<>();
+        appointments = appointmentRepository.findAppointmentByCusEmail(cusEmail);
+        if (appointments.size() != 0) {
+            for(Appointment a : appointments){
+                AppointmentCustom appointmentCustom = new AppointmentCustom();
+                appointmentCustom.setAppointment(a);
+                Optional<Feedback> feedback = feedbackRepository.findFeedbackByCusEmailAndApptID(cusEmail, a.getApptID());
+                if(feedback.isPresent()){
+                    appointmentCustom.setFeedback(feedback.get());
                 }
+                appointmentCustoms.add(appointmentCustom);
 
-            return new ResponseEntity<>(apptCustom, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(appointmentCustoms, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

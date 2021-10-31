@@ -54,6 +54,23 @@ public class ServiceController {
         }
     }
 
+    @GetMapping("/disableServices")
+    public ResponseEntity<List<Service>> getAllServiceDislable() {
+        try {
+            List<Service> services = new ArrayList<>();
+            serviceRepository.findByStatus(false).forEach(services::add);
+
+
+            if (services != null) {
+                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/findService")
     public ResponseEntity<Service> findServiceByServiceId(@RequestBody Service service){
         try {

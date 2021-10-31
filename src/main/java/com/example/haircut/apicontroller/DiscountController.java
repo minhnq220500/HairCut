@@ -36,6 +36,19 @@ public class DiscountController {
         }
     }
 
+    @GetMapping("/checkDiscountCode")
+    public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode) {
+        try {
+            Discount discount=discountRepository.findDiscountByDiscountCode(discountCode);
+            if (discount!=null) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //tạo discount check trùng name, trùng code
     @PostMapping("/createDiscount")
     public ResponseEntity<Discount> createFeedback(@RequestBody Discount discount){

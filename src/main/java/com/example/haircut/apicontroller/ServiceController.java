@@ -131,10 +131,11 @@ public class ServiceController {
 //                }
 
                 List<Service> listService=serviceRepository.findAll();
-                listService.remove(serviceData.getServiceID());
+                listService.remove(serviceData);
+                //list service đã bỏ thằng đang cập nhật
                 for(Service service1:listService){
-                    if(service1.getServiceName()==service.getServiceName()){
-                        return new ResponseEntity<>(serviceData, HttpStatus.ALREADY_REPORTED);
+                    if(service1.getServiceName().toUpperCase().trim().equals(service.getServiceName().toUpperCase().trim())){
+                        return new ResponseEntity<>(service1, HttpStatus.ALREADY_REPORTED);
                     }
                 }
                 serviceData.setServiceName(service.getServiceName());

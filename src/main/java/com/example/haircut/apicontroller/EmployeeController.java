@@ -110,7 +110,7 @@ public class EmployeeController {
             Employee employeeData = employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
 
             if (employeeData != null) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
             } else {
                 // mã hóa password rồi mới lưu vào db
                 String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));

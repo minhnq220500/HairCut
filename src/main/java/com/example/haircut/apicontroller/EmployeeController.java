@@ -139,7 +139,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping("/getEmployeeStatusTrue")
+    @PostMapping("/getEmployeeStatusTrue")
     public ResponseEntity<List<Employee>> getAllEmployeeStatusTrue(String roleID) {
         try {
             List<Employee> listEmp = new ArrayList<>();

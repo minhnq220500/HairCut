@@ -24,13 +24,14 @@ public class Appointment {
     private String empEmail;
     private List<Service> listService;
     private Date createDate;
+    private String discountCode;
 
     public Appointment() {
     }
 
     public Appointment(String apptID, String status, Date date, String description,
-                       String cusEmail, double totalPrice, int totalDuration, Date startTime,
-                       String empEmail, List<Service> listService, Date createDate) {
+                       String cusEmail, double totalPrice, int totalDuration,
+                       Date startTime, String empEmail, List<Service> listService, Date createDate, String discountCode) {
         this.apptID = apptID;
         this.status = status;
         this.date = date;
@@ -42,6 +43,7 @@ public class Appointment {
         this.empEmail = empEmail;
         this.listService = listService;
         this.createDate = createDate;
+        this.discountCode = discountCode;
     }
 
     public String getApptID() {

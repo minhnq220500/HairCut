@@ -242,4 +242,18 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PostMapping("/getCustomerByEmail")
+    public ResponseEntity<Customer> getCustomerByEmail(@RequestParam String cusEmail) {
+        try {
+            Customer customer = customerRepository.findCustomerByCusEmail(cusEmail);
+            if (customer != null) {
+                return new ResponseEntity<>(customer, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);// 500
+        }
+    }
 }

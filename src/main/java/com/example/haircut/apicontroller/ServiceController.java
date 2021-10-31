@@ -114,20 +114,36 @@ public class ServiceController {
 
             Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
             if(serviceData != null){
-                Service service1=serviceRepository.findServiceByServiceName(service.getServiceName());
-                if(service1!=null){
-                    return new ResponseEntity<>(serviceData, HttpStatus.ALREADY_REPORTED);
-                }
-                else{
-                    serviceData.setServiceName(service.getServiceName());
-                    serviceData.setPrice(service.getPrice());
-                    serviceData.setStatus(service.isStatus());
-                    serviceData.setDurationTime(service.getDurationTime());
 
-                    serviceRepository.save(serviceData);
+//                Service service1=serviceRepository.findServiceByServiceName(service.getServiceName());
+//                if(service1!=null){
+//                    return new ResponseEntity<>(serviceData, HttpStatus.ALREADY_REPORTED);
+//                }
+//                else{
+//                    serviceData.setServiceName(service.getServiceName());
+//                    serviceData.setPrice(service.getPrice());
+//                    serviceData.setStatus(service.isStatus());
+//                    serviceData.setDurationTime(service.getDurationTime());
+//
+//                    serviceRepository.save(serviceData);
+//
+//                    return new ResponseEntity<>(serviceData, HttpStatus.OK);
+//                }
 
-                    return new ResponseEntity<>(serviceData, HttpStatus.OK);
+                List<Service> listService=serviceRepository.findAll();
+                listService.remove(serviceData.getServiceID());
+                for(Service service1:listService){
+                    if(service1.getServiceName()==service.getServiceName()){
+                        return new ResponseEntity<>(serviceData, HttpStatus.ALREADY_REPORTED);
+                    }
                 }
+                serviceData.setServiceName(service.getServiceName());
+                serviceData.setPrice(service.getPrice());
+                serviceData.setStatus(service.isStatus());
+                serviceData.setDurationTime(service.getDurationTime());
+                serviceRepository.save(serviceData);
+                return new ResponseEntity<>(serviceData, HttpStatus.OK);
+
             }
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

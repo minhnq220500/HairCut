@@ -49,7 +49,7 @@ public class AppointmentController {
                 String newNotiID = new MyUtil().autoIncrementId(currentMaxNotiId);
 
                 String currentStatus="ON PROCESS";
-                String newStatus="DENY";
+                String newStatus="ON PROCESS";
                 boolean isRead=false;
                 String cusEmail=appointmentCanAdd.getCusEmail();
                 String apptID=newID;

@@ -30,11 +30,7 @@ public class NotificationController {
             else{
                 List<Notification> listNotiFalse=new ArrayList<>();
                 for (Notification noti:listNoti) {
-                    System.out.println(noti.isRead());
-                    System.out.println(noti.getNewStatus());
-                    System.out.println(noti.isRead()==false && (noti.getNewStatus()=="ACCEPT" || noti.getNewStatus()=="CANCEL BY ADMIN"));
-                    if(noti.isRead()==false && (noti.getNewStatus()=="ACCEPT" || noti.getNewStatus()=="CANCEL BY ADMIN")){
-
+                    if(noti.isRead()==false && (noti.getNewStatus().equalsIgnoreCase("ACCEPT") || noti.getNewStatus().equalsIgnoreCase("CANCEL BY ADMIN"))){
                         listNotiFalse.add(noti);
                     }
                 }

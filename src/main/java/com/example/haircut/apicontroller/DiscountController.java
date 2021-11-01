@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +38,24 @@ public class DiscountController {
         }
     }
 
-    @GetMapping("/checkDiscountCode")
-    public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode) {
+    @PostMapping("/checkDiscountCode")
+        public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode, Date createDate) {
         try {
             Discount discount=discountRepository.findDiscountByDiscountCode(discountCode);
             if (discount!=null) {
-                return new ResponseEntity<>(HttpStatus.OK);
+                if(discount.isStatus()){
+                    Date startDate=discount.getStartDate();
+                    Date endDate=discount.getEndDate();
+//                Date createDateFormat=new SimpleDateFormat("yyyy--mm--dd").parse(createDate);
+                    if(!startDate.after(createDate) && !endDate.before(createDate)){
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    }else{
+                        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    }
+                }
+                else{
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {

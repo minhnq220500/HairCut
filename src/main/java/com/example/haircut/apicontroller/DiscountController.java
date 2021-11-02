@@ -39,7 +39,7 @@ public class DiscountController {
     }
 
     @PostMapping("/checkDiscountCode")
-        public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode, Appointment appointment) {
+        public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode, @RequestBody Appointment appointment) {
         try {
             Discount discount=discountRepository.findDiscountByDiscountCode(discountCode);
             if (discount!=null) {

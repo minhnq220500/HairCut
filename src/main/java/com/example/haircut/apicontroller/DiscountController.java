@@ -52,7 +52,7 @@ public class DiscountController {
 //                        if(!historyDate.after(todayDate) && !futureDate.before(todayDate)) {
 //                            /* historyDate <= todayDate <= futureDate */
 //                        }
-                        return new ResponseEntity<>(HttpStatus.OK);
+                        return new ResponseEntity<>(discount,HttpStatus.OK);
                     }else{
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                     }

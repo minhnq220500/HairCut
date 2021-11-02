@@ -168,27 +168,20 @@ public class EmployeeController {
         }
     }
 
-//    @PostMapping("/getEmployeeStatusTrue")
-//    public ResponseEntity<List<Employee>> getAllEmployeeStatusTrue(String roleID) {
-//        try {
-//            List<Employee> listEmp = new ArrayList<>();
-//            employeeRepository.findEmployeeByRoleID(roleID).forEach(listEmp::add);
-//            if (listEmp.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//            else{
-//                List<Employee> listStatusTrue=new ArrayList<>();
-//                for(Employee employee:listEmp){
-//                    if(employee.isStatus()==true){
-//                        listStatusTrue.add(employee);
-//                    }
-//                }
-//                return new ResponseEntity<>(listStatusTrue,HttpStatus.OK);
-//            }
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @PostMapping("/getEmployeeEmpEmail")
+    public ResponseEntity<Employee> getAllEmployeeEmpEmail(@RequestParam String empEmail) {
+        try {
+            Employee employee = employeeRepository.findEmployeeByEmpEmail(empEmail);
+            if (employee!=null) {
+                return new ResponseEntity<>(employee,HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/employeesBySchedule")
     public ResponseEntity<List<Employee>> getAllEmployeeBySchedule(@RequestBody Schedule schedule) {

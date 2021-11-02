@@ -46,7 +46,7 @@ public class DiscountController {
                 if(discount.isStatus()){
                     Date startDate=discount.getStartDate();
                     Date endDate=discount.getEndDate();
-                    Date createDateFormat=new SimpleDateFormat("dd-mm-yyyy").parse(createDate);
+                    Date createDateFormat=new SimpleDateFormat("dd-MM-yyyy").parse(createDate);
 //                Date createDateFormat=new SimpleDateFormat("yyyy--mm--dd").parse(createDate);
                     if(!startDate.after(createDateFormat) && !endDate.before(createDateFormat)){
 //                        if(!historyDate.after(todayDate) && !futureDate.before(todayDate)) {

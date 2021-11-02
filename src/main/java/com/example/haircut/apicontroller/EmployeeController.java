@@ -168,6 +168,28 @@ public class EmployeeController {
         }
     }
 
+//    @PostMapping("/getEmployeeStatusTrue")
+//    public ResponseEntity<List<Employee>> getAllEmployeeStatusTrue(String roleID) {
+//        try {
+//            List<Employee> listEmp = new ArrayList<>();
+//            employeeRepository.findEmployeeByRoleID(roleID).forEach(listEmp::add);
+//            if (listEmp.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//            else{
+//                List<Employee> listStatusTrue=new ArrayList<>();
+//                for(Employee employee:listEmp){
+//                    if(employee.isStatus()==true){
+//                        listStatusTrue.add(employee);
+//                    }
+//                }
+//                return new ResponseEntity<>(listStatusTrue,HttpStatus.OK);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @PostMapping("/employeesBySchedule")
     public ResponseEntity<List<Employee>> getAllEmployeeBySchedule(@RequestBody Schedule schedule) {
         try {
@@ -187,11 +209,6 @@ public class EmployeeController {
         try{
             Employee employee1=employeeRepository.findEmployeeByEmpEmail(employee.getEmpEmail());
             if(employee1!=null){
-                employee1.setEmpName(employee.getEmpName());
-                employee1.setPhone(employee.getPhone());
-                employee1.setSeatNum(employee.getSeatNum());
-                employee1.setStatus(employee.isStatus());
-
                 List<Employee> listEmployee=employeeRepository.findAll();
                 System.out.println(listEmployee.size());
                 for(int i=0;i<listEmployee.size();i++){
@@ -206,6 +223,12 @@ public class EmployeeController {
                         return new ResponseEntity<>(employee2, HttpStatus.ALREADY_REPORTED);
                     }
                 }
+
+                employee1.setEmpName(employee.getEmpName());
+                employee1.setPhone(employee.getPhone());
+                employee1.setSeatNum(employee.getSeatNum());
+                employee1.setStatus(employee.isStatus());
+
                 employee1.setScheduleID(employee.getScheduleID());
 
                 employee1.setHireDate(employee.getHireDate());

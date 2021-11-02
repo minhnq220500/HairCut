@@ -1,10 +1,7 @@
 package com.example.haircut.apicontroller;
 
 import com.example.haircut.dto.LoginResponseDTO;
-import com.example.haircut.model.Appointment;
-import com.example.haircut.model.Customer;
-import com.example.haircut.model.Employee;
-import com.example.haircut.model.Schedule;
+import com.example.haircut.model.*;
 import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.EmployeeRepository;
 import com.example.haircut.repository.ScheduleRepository;
@@ -195,6 +192,20 @@ public class EmployeeController {
                 employee1.setSeatNum(employee.getSeatNum());
                 employee1.setStatus(employee.isStatus());
 
+                List<Employee> listEmployee=employeeRepository.findAll();
+                System.out.println(listEmployee.size());
+                for(int i=0;i<listEmployee.size();i++){
+                    if(listEmployee.get(i).getSeatNum().toUpperCase().trim().equals(employee1.getSeatNum().toUpperCase().trim())){
+                        listEmployee.remove(i);
+                    }
+                }
+                System.out.println(listEmployee.size());
+                //list service đã bỏ thằng đang cập nhật
+                for(Employee employee2:listEmployee){
+                    if(employee2.getSeatNum().toUpperCase().trim().equals(employee.getSeatNum().toUpperCase().trim())){
+                        return new ResponseEntity<>(employee2, HttpStatus.ALREADY_REPORTED);
+                    }
+                }
                 employee1.setScheduleID(employee.getScheduleID());
 
                 employee1.setHireDate(employee.getHireDate());

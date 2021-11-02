@@ -39,7 +39,7 @@ public class DiscountController {
     }
 
     @PostMapping("/checkDiscountCode")
-        public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode, Date createDate) {
+        public ResponseEntity<Discount> checkDiscountCode(@RequestParam String discountCode, Appointment appointment) {
         try {
             Discount discount=discountRepository.findDiscountByDiscountCode(discountCode);
             if (discount!=null) {
@@ -47,7 +47,10 @@ public class DiscountController {
                     Date startDate=discount.getStartDate();
                     Date endDate=discount.getEndDate();
 //                Date createDateFormat=new SimpleDateFormat("yyyy--mm--dd").parse(createDate);
-                    if(!startDate.after(createDate) && !endDate.before(createDate)){
+                    if(!startDate.after(appointment.getCreateDate()) && !endDate.before(appointment.getCreateDate())){
+//                        if(!historyDate.after(todayDate) && !futureDate.before(todayDate)) {
+//                            /* historyDate <= todayDate <= futureDate */
+//                        }
                         return new ResponseEntity<>(HttpStatus.OK);
                     }else{
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

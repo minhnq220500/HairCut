@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface EmployeeRepository extends MongoRepository<Employee,String> {
     Employee findEmployeeByEmpEmail(String empEmail);
 
+    Employee findEmployeeBySeatNum(String seatNum);
+
     List<Employee> findByScheduleID(String scheduleId);
 
     List<Employee> findEmployeeByRoleID(String roleID);

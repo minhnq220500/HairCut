@@ -119,13 +119,20 @@ public class EmployeeController {
             if (employeeData != null) {
                 return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
             } else {
-                // mã hóa password rồi mới lưu vào db
-                String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));
-                employee.setPassword(hash);
 
-                Employee _employee = employeeRepository.save(employee);
+                Employee employee1=employeeRepository.findEmployeeBySeatNum(employee.getSeatNum());
+                if(employee1!=null){
+                    return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+                }
+                else{
+                    // mã hóa password rồi mới lưu vào db
+                    String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));
+                    employee.setPassword(hash);
 
-                return new ResponseEntity<>(_employee, HttpStatus.CREATED);
+                    Employee _employee = employeeRepository.save(employee);
+
+                    return new ResponseEntity<>(_employee, HttpStatus.CREATED);
+                }
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

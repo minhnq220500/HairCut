@@ -15,7 +15,7 @@ public class DateUtil {
     public Date getCompleteDate(Date scheduleDate, Date apptDate) {
         try {
             //GET DATE AND TIME FROM APPOINTMENT AND THEN COMBINE THEM
-            long TIME_OFF = 25200000;
+            long TIME_OFF = 0;
             String date = dateFormat.format(new Date(apptDate.getTime() - TIME_OFF));
             String time = timeFormat.format(new Date(scheduleDate.getTime() - TIME_OFF));
             Date datetime = datetimeFormat.parse(date + " " + time);

@@ -29,9 +29,8 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(String apptID, String status, Date date, String description,
-                       String cusEmail, double totalPrice, int totalDuration,
-                       Date startTime, String empEmail, List<Service> listService, Date createDate, String discountCode) {
+    public Appointment(String id, String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime, String empEmail, List<Service> listService, Date createDate, String discountCode) {
+        this.id = id;
         this.apptID = apptID;
         this.status = status;
         this.date = date;
@@ -44,6 +43,14 @@ public class Appointment {
         this.listService = listService;
         this.createDate = createDate;
         this.discountCode = discountCode;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getApptID() {
@@ -132,5 +139,13 @@ public class Appointment {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getDiscountCode() {
+        return discountCode;
+    }
+
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
     }
 }

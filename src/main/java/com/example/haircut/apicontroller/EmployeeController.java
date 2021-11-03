@@ -175,6 +175,28 @@ public class EmployeeController {
         }
     }
 
+    @PostMapping("/getEmployeeStatusFalse")
+    public ResponseEntity<List<Employee>> getEmployeeStatusFalse(String roleID) {
+        try {
+            List<Employee> listEmp = new ArrayList<>();
+            employeeRepository.findEmployeeByRoleID(roleID).forEach(listEmp::add);
+            if (listEmp.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            else{
+                List<Employee> listStatusTrue=new ArrayList<>();
+                for(Employee employee:listEmp){
+                    if(employee.isStatus()==false){
+                        listStatusTrue.add(employee);
+                    }
+                }
+                return new ResponseEntity<>(listStatusTrue,HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/getEmployeeEmpEmail")
     public ResponseEntity<Employee> getAllEmployeeEmpEmail(@RequestParam String empEmail) {
         try {

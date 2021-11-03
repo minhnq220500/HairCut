@@ -58,8 +58,8 @@ public class FeedbackController {
 
     // lấy ra 1 feedback bằng apptID
     @GetMapping("/feedbackApptID")
-    public ResponseEntity<List<Feedback>> getFeedbacktByAppointmentId(@RequestParam String apptID) {
-        List<Feedback> feedback = feedbackRepository.findFeedbackByApptID(apptID);
+    public ResponseEntity<Feedback> getFeedbacktByAppointmentId(@RequestParam String apptID) {
+        Feedback feedback = feedbackRepository.findFeedbackByApptID(apptID);
         if (feedback!=null) {
             return new ResponseEntity<>(feedback, HttpStatus.OK);
         } else {

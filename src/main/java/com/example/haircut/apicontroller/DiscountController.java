@@ -3,6 +3,7 @@ package com.example.haircut.apicontroller;
 import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Discount;
 import com.example.haircut.model.Feedback;
+import com.example.haircut.model.Service;
 import com.example.haircut.repository.DiscountRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,32 @@ public class DiscountController {
         try {
             List<Discount> listDiscount = new ArrayList<>();
             discountRepository.findAll().forEach(listDiscount::add);
+            if (listDiscount.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(listDiscount, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getAvailableDiscounts")
+    public ResponseEntity<List<Discount>> getAvailableDiscounts() {
+        try {
+            List<Discount> listDiscount = discountRepository.findDiscountsByStatus(true);
+            if (listDiscount.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(listDiscount, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getDisableDiscounts")
+    public ResponseEntity<List<Discount>> getDisableDiscounts() {
+        try {
+            List<Discount> listDiscount = discountRepository.findDiscountsByStatus(false);
             if (listDiscount.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -93,7 +120,21 @@ public class DiscountController {
         Discount discount1=discountRepository.findDiscountByDiscountCode(discount.getDiscountCode());
         // xem thử nó có trong database không
         if (discount1!=null) {
-            discount1.setDiscountCode(discount.getDiscountCode());
+            List<Discount> listDiscount=discountRepository.findAll();
+            System.out.println(listDiscount.size());
+            for(int i=0;i<listDiscount.size();i++){
+                if(listDiscount.get(i).getDiscountName().toUpperCase().trim().equals(discount1.getDiscountName().toUpperCase().trim())){
+                    listDiscount.remove(i);
+                }
+            }
+            System.out.println(listDiscount.size());
+            //list service đã bỏ thằng đang cập nhật
+            for(Discount discount2:listDiscount){
+                if(discount2.getDiscountName().toUpperCase().trim().equals(discount.getDiscountName().toUpperCase().trim())){
+                    return new ResponseEntity<>(discount2, HttpStatus.ALREADY_REPORTED);
+                }
+            }
+
             discount1.setDiscountName(discount.getDiscountName());
             discount1.setValue(discount.getValue());
             discount1.setStartDate(discount.getStartDate());

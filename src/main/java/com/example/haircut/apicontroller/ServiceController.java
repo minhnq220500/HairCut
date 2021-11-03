@@ -48,14 +48,17 @@ public class ServiceController {
             List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("ACCEPT");
 
             List<Service> listServiceBookedInDB=new ArrayList<>();
-//            for(Appointment appointment:listAppointmentsAccepted){
-//                List<Service> listService=appointment.getListService();
-//                for(Service service:list)
-//            }
-//
+            for(Appointment appointment:listAppointmentsAccepted){
+                List<Service> listService=appointment.getListService();
+                listServiceBookedInDB.addAll(listService);
+            }
+
 //            if (services != null) {
 //                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
 //            }
+
+
+
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

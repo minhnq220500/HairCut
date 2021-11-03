@@ -272,6 +272,7 @@ public class EmployeeController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
                 employee.setStatus(false);
+                employeeRepository.save(employee);
                 return new ResponseEntity<>(employee,HttpStatus.OK);
             }
         }catch (Exception e){

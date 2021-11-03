@@ -264,6 +264,22 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/removeEmployeeByEmpEmail")
+    public ResponseEntity<Employee> removeEmployeeByEmpEmail(@RequestParam String empEmail){
+        try{
+            Employee employee=employeeRepository.findEmployeeByEmpEmail(empEmail);
+            if(employee==null){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                employee.setStatus(false);
+                return new ResponseEntity<>(employee,HttpStatus.OK);
+            }
+        }catch (Exception e){
+            System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/matchingEmployee")
     public ResponseEntity<List<Employee>> findEmployeeForAppointment(@RequestBody Appointment appt) {
         DateUtil dateUtil = new DateUtil();

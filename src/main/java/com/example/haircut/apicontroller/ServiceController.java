@@ -1,6 +1,8 @@
 package com.example.haircut.apicontroller;
 
+import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Service;
+import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.ServiceRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class ServiceController {
     @Autowired
     ServiceRepository serviceRepository;
 
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
     @GetMapping("/services")
     public ResponseEntity<List<Service>> getAllService() {
         try {
@@ -36,6 +41,25 @@ public class ServiceController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+//    @GetMapping("/getSuggestedServices")
+//    public ResponseEntity<List<Service>> getSuggestedServices() {
+//        try {
+//            List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("ACCEPT");
+//
+//            for(Appointment appointment:listAppointmentsAccepted){
+//                a
+//            }
+//
+//            if (services != null) {
+//                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
+//            }
+//
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @GetMapping("/availableServices")
     public ResponseEntity<List<Service>> getAllServiceAvailable() {

@@ -10,6 +10,7 @@ public class Service {
 
     private String serviceID;
     private String serviceName;
+    private String imgLink;
     private double price;
     private boolean status;
     private int durationTime;
@@ -17,10 +18,10 @@ public class Service {
     public Service() {
     }
 
-    public Service(String id, String serviceID, String serviceName, double price, boolean status, int durationTime) {
-        this.id = id;
+    public Service(String serviceID, String serviceName, String imgLink, double price, boolean status, int durationTime) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
+        this.imgLink = imgLink;
         this.price = price;
         this.status = status;
         this.durationTime = durationTime;
@@ -48,6 +49,14 @@ public class Service {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getImgLink() {
+        return imgLink;
+    }
+
+    public void setImgLink(String imgLink) {
+        this.imgLink = imgLink;
     }
 
     public double getPrice() {

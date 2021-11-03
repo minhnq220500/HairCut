@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface AppointmentRepository extends MongoRepository<Appointment,String> {
     Optional<Appointment> findAppointmentByApptID(String apptID);
     List<Appointment> findAppointmentByCusEmail(String cusEmail);
+    List<Appointment> findAppointmentByStatus(String status);
 
     Appointment findTopByOrderByIdDesc();
 

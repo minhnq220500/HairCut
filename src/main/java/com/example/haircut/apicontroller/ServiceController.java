@@ -42,24 +42,26 @@ public class ServiceController {
         }
     }
 
-//    @GetMapping("/getSuggestedServices")
-//    public ResponseEntity<List<Service>> getSuggestedServices() {
-//        try {
-//            List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("ACCEPT");
-//
+    @GetMapping("/getSuggestedServices")
+    public ResponseEntity<List<Service>> getSuggestedServices() {
+        try {
+            List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("ACCEPT");
+
+            List<Service> listServiceBookedInDB=new ArrayList<>();
 //            for(Appointment appointment:listAppointmentsAccepted){
-//                a
+//                List<Service> listService=appointment.getListService();
+//                for(Service service:list)
 //            }
 //
 //            if (services != null) {
 //                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
 //            }
-//
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/availableServices")
     public ResponseEntity<List<Service>> getAllServiceAvailable() {

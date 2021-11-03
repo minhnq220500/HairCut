@@ -121,7 +121,7 @@ public class AppointmentController {
     // khi sử dụng request body thì phải cung cấp cho nó đủ thông tin của cái object
     // java đó
     @PutMapping("/updateAppointmentStatus")
-    public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status, String empEmail) {
+    public ResponseEntity<Appointment> updateAppointment(@RequestParam String apptID, String status, String empEmail, String description) {
         Optional<Appointment> appointmentCanUpdateData = appointmentRepository.findAppointmentByApptID(apptID);
 
         Optional<Notification> noti=notificationRepository.findNotificationByApptID(apptID);
@@ -130,6 +130,7 @@ public class AppointmentController {
             Appointment appointmentSeLuuVaoDatabase = appointmentCanUpdateData.get();// lấy data của cái trên
             appointmentSeLuuVaoDatabase.setStatus(status);
             appointmentSeLuuVaoDatabase.setEmpEmail(empEmail);
+            appointmentSeLuuVaoDatabase.setDescription(description);
 
             try{
                 Notification notification_=noti.get();

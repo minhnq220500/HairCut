@@ -2,6 +2,7 @@ package com.example.haircut.apicontroller;
 
 import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Feedback;
+import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.FeedbackRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class FeedbackController {
     @Autowired
     private FeedbackRepository feedbackRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     // create feedback
     // post
@@ -64,6 +69,25 @@ public class FeedbackController {
             return new ResponseEntity<>(feedback, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getListFeedbackByEmpEmail")
+    public ResponseEntity<List<Feedback>> getListFeedbackByApptID(@RequestParam String empEmail) {
+        List<Appointment> listAppointment=appointmentRepository.findAppointmentByEmpEmail(empEmail);
+
+        if(listAppointment.size()==0){
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        else{
+            List<Feedback> listFeedback=new ArrayList<>();
+            for(Appointment appointment:listAppointment){
+                Feedback feedback = feedbackRepository.findFeedbackByApptID(appointment.getApptID());
+                if(feedback!=null){
+                    listFeedback.add(feedback);
+                }
+            }
+            return new ResponseEntity<>(listFeedback, HttpStatus.OK);
         }
     }
 }

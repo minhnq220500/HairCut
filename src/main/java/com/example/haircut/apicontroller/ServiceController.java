@@ -2,6 +2,7 @@ package com.example.haircut.apicontroller;
 
 import com.example.haircut.model.Appointment;
 import com.example.haircut.model.Service;
+import com.example.haircut.model.ServiceCount;
 import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.ServiceRepository;
 import com.example.haircut.utils.MyUtil;
@@ -42,6 +43,7 @@ public class ServiceController {
         }
     }
 
+    //đề xuất service
     @GetMapping("/getSuggestedServices")
     public ResponseEntity<List<Service>> getSuggestedServices() {
         try {
@@ -52,6 +54,22 @@ public class ServiceController {
                 List<Service> listService=appointment.getListService();
                 listServiceBookedInDB.addAll(listService);
             }
+
+            List<ServiceCount> listWithoutDuplicateElements = new ArrayList<>();
+            for(Service service:listServiceBookedInDB){
+                if(!listWithoutDuplicateElements.contains(service.getServiceID())){
+                    ServiceCount serviceCount=new ServiceCount(service.getServiceID(),0);
+                    listWithoutDuplicateElements.add(serviceCount);
+                }
+            }
+
+            for(int i=0;i<=listServiceBookedInDB.size();i++){
+                int check=listWithoutDuplicateElements.indexOf(listServiceBookedInDB.get(i).getServiceID());
+                int count=listWithoutDuplicateElements.get(check).getCount() + 1;
+                listWithoutDuplicateElements.get(check).setCount(count);
+            }
+
+
 
 //            if (services != null) {
 //                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);

@@ -117,6 +117,27 @@ public class AppointmentController {
          }
      }
 
+    @GetMapping("/appointmentEmpEmail")
+    public ResponseEntity<List<Appointment>> appointmentEmpEmail(@RequestParam String empEmail) {
+        try {
+            List<Appointment> listAppt = appointmentRepository.findAppointmentByEmpEmail(empEmail);
+            if (listAppt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                List<Appointment> listAccept=new ArrayList<>();
+                for(Appointment appointment:listAppt){
+                    if(appointment.getStatus().equals("ACCEPT")){
+                        listAccept.add(appointment);
+                    }
+                }
+                return new ResponseEntity<>(listAccept,HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // update
     // khi sử dụng request body thì phải cung cấp cho nó đủ thông tin của cái object
     // java đó

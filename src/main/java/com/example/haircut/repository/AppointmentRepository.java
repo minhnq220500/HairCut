@@ -12,6 +12,7 @@ public interface AppointmentRepository extends MongoRepository<Appointment,Strin
     Optional<Appointment> findAppointmentByApptID(String apptID);
     List<Appointment> findAppointmentByCusEmail(String cusEmail);
     List<Appointment> findAppointmentByStatus(String status);
+    List<Appointment> findAppointmentByEmpEmail(String empEmail);
 
     Appointment findTopByOrderByIdDesc();
 

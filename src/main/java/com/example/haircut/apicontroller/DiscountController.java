@@ -115,6 +115,38 @@ public class DiscountController {
         }
     }
 
+    @PostMapping("/removeDiscountByCode")
+    public ResponseEntity<Discount> removeDiscountByCode(@RequestParam String discountCode){
+        try {
+            Discount discount1=discountRepository.findDiscountByDiscountCode(discountCode);
+            if(discount1==null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                discount1.setStatus(false);
+                discountRepository.save(discount1);
+                return new ResponseEntity<>(discount1, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
+        }
+    }
+
+    @PostMapping("/restoreDiscountByCode")
+    public ResponseEntity<Discount> restoreDiscountByCode(@RequestParam String discountCode){
+        try {
+            Discount discount1=discountRepository.findDiscountByDiscountCode(discountCode);
+            if(discount1==null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                discount1.setStatus(true);
+                discountRepository.save(discount1);
+                return new ResponseEntity<>(discount1, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
+        }
+    }
+
     @PutMapping("/updateDiscount")
     public ResponseEntity<Discount> updateFeedback(@RequestBody Discount discount){
         Discount discount1=discountRepository.findDiscountByDiscountCode(discount.getDiscountCode());

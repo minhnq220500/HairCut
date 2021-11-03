@@ -189,9 +189,9 @@ public class ServiceController {
     }
 
     @PostMapping("/deleteService")
-    public ResponseEntity<Service> deleteService(@RequestBody Service service){
+    public ResponseEntity<Service> deleteService(@RequestParam String serviceID){
         try {
-            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            Service serviceData = serviceRepository.findByServiceID(serviceID);
             if(serviceData != null){
                 serviceData.setStatus(false);
                 serviceRepository.save(serviceData);
@@ -206,9 +206,9 @@ public class ServiceController {
     }
 
     @PostMapping("/restoreService")
-    public ResponseEntity<Service> restoreService(@RequestBody Service service){
+    public ResponseEntity<Service> restoreService(@RequestParam String serviceID){
         try {
-            Service serviceData = serviceRepository.findByServiceID(service.getServiceID());
+            Service serviceData = serviceRepository.findByServiceID(serviceID);
             if(serviceData != null){
                 serviceData.setStatus(true);
                 serviceRepository.save(serviceData);
@@ -221,6 +221,8 @@ public class ServiceController {
         }
 
     }
+
+    
 
 //    @GetMapping("/serviceByCate/{id}")
 //    public ResponseEntity<List<Service>> getListServiceByCategoryId(@PathVariable String id){

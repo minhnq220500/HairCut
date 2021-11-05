@@ -71,7 +71,7 @@ public class ServiceController {
 
             List<ServiceCount> listCount=new ArrayList<>();
             for(Service service:listWithoutDuplicateElements){
-                ServiceCount serviceCount=new ServiceCount(service.getServiceID(),service.getServiceName(),0);
+                ServiceCount serviceCount=new ServiceCount(service.getServiceID(),service.getServiceName(),service.getPrice(),0);
                 listCount.add(serviceCount);
             }
 

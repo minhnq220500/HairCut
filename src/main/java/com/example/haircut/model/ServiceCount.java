@@ -5,11 +5,13 @@ import java.util.Comparator;
 public class ServiceCount implements Comparator<ServiceCount>{
     private String serviceID;
     private String serviceName;
+    private double price;
     private int count;
 
-    public ServiceCount(String serviceID, String serviceName, int count) {
+    public ServiceCount(String serviceID, String serviceName, double price, int count) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
+        this.price = price;
         this.count = count;
     }
 
@@ -37,11 +39,20 @@ public class ServiceCount implements Comparator<ServiceCount>{
         this.serviceName = serviceName;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "ServiceCount{" +
                 "serviceID='" + serviceID + '\'' +
                 ", serviceName='" + serviceName + '\'' +
+                ", price=" + price +
                 ", count=" + count +
                 '}';
     }

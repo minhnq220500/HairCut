@@ -10,7 +10,6 @@ public class Service {
 
     private String serviceID;
     private String serviceName;
-    private String imgLink;
     private double price;
     private boolean status;
     private int durationTime;
@@ -18,10 +17,9 @@ public class Service {
     public Service() {
     }
 
-    public Service(String serviceID, String serviceName, String imgLink, double price, boolean status, int durationTime) {
+    public Service(String serviceID, String serviceName, double price, boolean status, int durationTime) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
-        this.imgLink = imgLink;
         this.price = price;
         this.status = status;
         this.durationTime = durationTime;
@@ -51,14 +49,6 @@ public class Service {
         this.serviceName = serviceName;
     }
 
-    public String getImgLink() {
-        return imgLink;
-    }
-
-    public void setImgLink(String imgLink) {
-        this.imgLink = imgLink;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -83,4 +73,14 @@ public class Service {
         this.durationTime = durationTime;
     }
 
+    @Override
+    public String toString() {
+        return "Service{" +
+                " serviceID='" + serviceID + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", durationTime=" + durationTime +
+                '}';
+    }
 }

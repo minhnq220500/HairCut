@@ -12,9 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api")
 @RestController
@@ -45,41 +44,67 @@ public class ServiceController {
 
     //đề xuất service
     @GetMapping("/getSuggestedServices")
-    public ResponseEntity<List<Service>> getSuggestedServices() {
+    public ResponseEntity<List<ServiceCount>> getSuggestedServices() {
         try {
-            List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("ACCEPT");
+            List<Appointment> listAppointmentsAccepted=appointmentRepository.findAppointmentByStatus("DONE");
 
             List<Service> listServiceBookedInDB=new ArrayList<>();
             for(Appointment appointment:listAppointmentsAccepted){
                 List<Service> listService=appointment.getListService();
+                System.out.println(listService.size());
                 listServiceBookedInDB.addAll(listService);
             }
 
-            List<ServiceCount> listWithoutDuplicateElements = new ArrayList<>();
             for(Service service:listServiceBookedInDB){
-                if(!listWithoutDuplicateElements.contains(service.getServiceID())){
-                    ServiceCount serviceCount=new ServiceCount(service.getServiceID(),0);
-                    listWithoutDuplicateElements.add(serviceCount);
-                }
+                System.out.println(service.toString());
             }
 
-            for(int i=0;i<=listServiceBookedInDB.size();i++){
-                int check=listWithoutDuplicateElements.indexOf(listServiceBookedInDB.get(i).getServiceID());
-                int count=listWithoutDuplicateElements.get(check).getCount() + 1;
-                listWithoutDuplicateElements.get(check).setCount(count);
+            Set<Service> setWithoutDuplicateElements = listServiceBookedInDB.stream()
+                    .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Service::getServiceID))));
+
+            System.out.println("---------------------------");
+//            for(Service service:setWithoutDuplicateElements){
+//                System.out.println(service.toString());
+//            }
+            List<Service> listWithoutDuplicateElements = new ArrayList<>();
+            listWithoutDuplicateElements.addAll(setWithoutDuplicateElements);
+
+            List<ServiceCount> listCount=new ArrayList<>();
+            for(Service service:listWithoutDuplicateElements){
+                ServiceCount serviceCount=new ServiceCount(service.getServiceID(),service.getServiceName(),0);
+                listCount.add(serviceCount);
             }
 
-
-
-//            if (services != null) {
-//                return new ResponseEntity<List<Service>>(services, HttpStatus.OK);
+//            System.out.println("---------------------------");
+//            for(ServiceCount service:listCount){
+//                System.out.println(service.toString());
 //            }
 
+            for (ServiceCount serviceCount:listCount) {
+                for(Service service:listServiceBookedInDB){
+                    if(serviceCount.getServiceID().equals(service.getServiceID())){
+                        int count=serviceCount.getCount()+1;
+                        serviceCount.setCount(count);
+                    }
+                }
+            }
+            System.out.println("---------------------------");
+            for(ServiceCount service:listCount){
+                System.out.println(service.toString());
+            }
 
-
-
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            Collections.sort(listCount,(ServiceCount s1, ServiceCount s2 ) -> s2.getCount() - s1.getCount() );
+//            List<ServiceCount> listTop3=new ArrayList<>();
+//            if(listCount.size()<3)
+//                listTop3=listCount;
+//            else
+//                listTop3=listCount.subList(0,3);
+//            //không lấy vị trí thứ 3
+//
+//            return new ResponseEntity<>(listTop3,HttpStatus.OK);
+            return new ResponseEntity<>(listCount.size()>=3?listCount.subList(0,3):listCount,HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

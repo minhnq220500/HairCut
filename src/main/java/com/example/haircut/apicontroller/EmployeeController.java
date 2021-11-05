@@ -306,7 +306,8 @@ public class EmployeeController {
     @PostMapping("/matchingEmployee")
     public ResponseEntity<List<Employee>> findEmployeeForAppointment(@RequestBody Appointment appt) {
         DateUtil dateUtil = new DateUtil();
-        List<Employee> employees = employeeRepository.findAll();
+//        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findByStatus(true);
         Optional<Appointment> appointmentData = appointmentRepository.findAppointmentByApptID(appt.getApptID());
 
         if (employees.size() > 0 && appointmentData.isPresent()) {
@@ -335,6 +336,13 @@ public class EmployeeController {
 
             for(Employee emp: new ArrayList<>(employees)){
                 List<Appointment> appointments = appointmentRepository.findByEmpEmailAndStatusNotContaining(emp.getEmpEmail(), "CANCEL BY CUSTOMER");
+
+                //REMOVE ALL DENY APPOINTMENT
+                for(Appointment a: new ArrayList<>(appointments)){
+                    if(a.getStatus().equals("DENY")){
+                        appointments.remove(a);
+                    }
+                }
 
                 //REMOVE APPOINTMENT FROM REQUEST BODY
                 appointments = dateUtil.removeAppointment(appointments, appt.getApptID());

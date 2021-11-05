@@ -361,4 +361,27 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/updateEmployeeScheduleCustom")
+    public ResponseEntity<Employee> updateEmployeeSchedule(@RequestParam String scheduleID, @RequestParam String[] employeesEmail){
+        try{
+            if(employeesEmail.length == 0){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                for(int i = 0; i < employeesEmail.length; i++){
+                    Employee employee=employeeRepository.findEmployeeByEmpEmail(employeesEmail[i]);
+                    if(employee != null){
+                        employee.setScheduleID(scheduleID);
+                        employeeRepository.save(employee);
+                    }else{
+                    }
+                }
+
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }catch (Exception e){
+            System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

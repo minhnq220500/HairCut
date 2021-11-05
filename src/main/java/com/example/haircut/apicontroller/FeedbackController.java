@@ -32,13 +32,27 @@ public class FeedbackController {
     public ResponseEntity<Feedback> createFeedback(@RequestBody Feedback feedback){
         try {
             //Feedback feedbackLast=feedbackRepository.findAll(Sort.by(Sort.Direction.DESC, "feedbackID")).get(0);
-            Feedback feedbackLast=feedbackRepository.findTopByOrderByIdDesc();
-            String currentMaxId = feedbackLast.getFeedbackID();
-            String newID=new MyUtil().autoIncrementId(currentMaxId);
-            feedback.setFeedbackID(newID);
+            Optional<Appointment> appointment=appointmentRepository.findAppointmentByApptID(feedback.getApptID());
+            if(appointment.isPresent()){
+                Appointment appointment1=appointment.get();
+                if(appointment1.isFeedbacked()==true){
+                    return new ResponseEntity<>(null, HttpStatus.ALREADY_REPORTED);
+                }
+                else{
+                    Feedback feedbackLast=feedbackRepository.findTopByOrderByIdDesc();
+                    String currentMaxId = feedbackLast.getFeedbackID();
+                    String newID=new MyUtil().autoIncrementId(currentMaxId);
+                    feedback.setFeedbackID(newID);
 
-            Feedback feedbackLuuDatabase = feedbackRepository.save(feedback);
-            return new ResponseEntity<>(feedbackLuuDatabase, HttpStatus.CREATED);
+                    appointment1.setFeedbacked(true);
+                    appointmentRepository.save(appointment1);
+
+                    Feedback feedbackLuuDatabase = feedbackRepository.save(feedback);
+                    return new ResponseEntity<>(feedbackLuuDatabase, HttpStatus.CREATED);
+                }
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);//500
         }
@@ -74,20 +88,26 @@ public class FeedbackController {
 
     @GetMapping("/getListFeedbackByEmpEmail")
     public ResponseEntity<List<Feedback>> getListFeedbackByApptID(@RequestParam String empEmail) {
-        List<Appointment> listAppointment=appointmentRepository.findAppointmentByEmpEmail(empEmail);
+        try{
+            List<Appointment> listAppointment=appointmentRepository.findAppointmentByEmpEmail(empEmail);
 
-        if(listAppointment.size()==0){
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        }
-        else{
-            List<Feedback> listFeedback=new ArrayList<>();
-            for(Appointment appointment:listAppointment){
-                Feedback feedback = feedbackRepository.findFeedbackByApptID(appointment.getApptID());
-                if(feedback!=null){
-                    listFeedback.add(feedback);
-                }
+            if(listAppointment.size()==0){
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(listFeedback, HttpStatus.OK);
+            else{
+                List<Feedback> listFeedback=new ArrayList<>();
+                for(Appointment appointment:listAppointment){
+                    Feedback feedback = feedbackRepository.findFeedbackByApptID(appointment.getApptID());
+                    if(feedback!=null){
+                        listFeedback.add(feedback);
+                    }
+                }
+                return new ResponseEntity<>(listFeedback, HttpStatus.OK);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 }

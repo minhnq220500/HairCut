@@ -14,4 +14,6 @@ public interface EmployeeRepository extends MongoRepository<Employee,String> {
     List<Employee> findByScheduleID(String scheduleId);
 
     List<Employee> findEmployeeByRoleID(String roleID);
+
+    List<Employee> findByStatus(boolean status);
 }

@@ -17,6 +17,8 @@ public interface AppointmentRepository extends MongoRepository<Appointment,Strin
     Appointment findTopByOrderByIdDesc();
 
     List<Appointment> findByEmpEmailAndStatusNotContaining(String empEmail, String status);
+
+    List<Appointment> findByDiscountCode(String discountCode);
 }
 //Optional<T> mới được giới thiệu trong gói java.util.
 // Nó được sử dụng để kiểm tra xem một biến có giá trị tồn tại giá trị hay không

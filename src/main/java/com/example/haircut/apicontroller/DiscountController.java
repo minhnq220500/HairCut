@@ -1,9 +1,7 @@
 package com.example.haircut.apicontroller;
 
-import com.example.haircut.model.Appointment;
-import com.example.haircut.model.Discount;
-import com.example.haircut.model.Feedback;
-import com.example.haircut.model.Service;
+import com.example.haircut.model.*;
+import com.example.haircut.repository.AppointmentRepository;
 import com.example.haircut.repository.DiscountRepository;
 import com.example.haircut.utils.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,9 @@ public class DiscountController {
 
     @Autowired
     DiscountRepository discountRepository;
+
+    @Autowired
+    AppointmentRepository appointmentRepository;
 
     @GetMapping("/discounts")
     public ResponseEntity<List<Discount>> getAllDiscountt() {
@@ -178,5 +179,27 @@ public class DiscountController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/discountCodeRemovable")
+    public ResponseEntity<Discount> checkDiscountCode(@RequestBody Discount discount) {
+        try {
+            Date checkDate = discount.getStartDate();
+            List<Appointment> appointments = new ArrayList<>();
+            appointments = appointmentRepository.findByDiscountCode(discount.getDiscountCode());;
+            if(appointments.size() > 0){
+                for(Appointment a : appointments){
+                    if(a.getStartTime().compareTo(discount.getStartDate()) > 0){
+                        return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+                    }
+                }
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }

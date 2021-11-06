@@ -384,4 +384,21 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/restoreEmployeeByEmpEmail")
+    public ResponseEntity<Employee> restoreEmployeeByEmpEmail(@RequestParam String empEmail){
+        try{
+            Employee employee=employeeRepository.findEmployeeByEmpEmail(empEmail);
+            if(employee==null){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                employee.setStatus(true);
+                employeeRepository.save(employee);
+                return new ResponseEntity<>(employee,HttpStatus.OK);
+            }
+        }catch (Exception e){
+            System.out.println(e.toString().toUpperCase());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

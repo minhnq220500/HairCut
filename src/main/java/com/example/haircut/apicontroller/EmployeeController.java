@@ -63,6 +63,7 @@ public class EmployeeController {
             }
             else{
                 //mã hóa password rồi mới lưu vào db
+                //2132132132
                 String hash = BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt(4));
                 employee.setPassword(hash);
 

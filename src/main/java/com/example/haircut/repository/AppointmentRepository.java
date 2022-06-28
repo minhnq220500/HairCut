@@ -4,12 +4,21 @@ import com.example.haircut.model.Appointment;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends MongoRepository<Appointment,String> {
     Optional<Appointment> findAppointmentByApptID(String apptID);
-    Optional<Appointment> findAppointmentByCusEmail(String cusEmail);
+    List<Appointment> findAppointmentByCusEmail(String cusEmail);
+    List<Appointment> findAppointmentByStatus(String status);
+    List<Appointment> findAppointmentByEmpEmail(String empEmail);
+
+    Appointment findTopByOrderByIdDesc();
+
+    List<Appointment> findByEmpEmailAndStatusNotContaining(String empEmail, String status);
+
+    List<Appointment> findByDiscountCode(String discountCode);
 }
 //Optional<T> mới được giới thiệu trong gói java.util.
 // Nó được sử dụng để kiểm tra xem một biến có giá trị tồn tại giá trị hay không

@@ -13,21 +13,16 @@ public class Service {
     private double price;
     private boolean status;
     private int durationTime;
-    private int discount;
-    private String cateID;
 
     public Service() {
     }
 
-    public Service(String id, String serviceID, String serviceName, double price, boolean status, int durationTime, int discount, String cateID) {
-        this.id = id;
+    public Service(String serviceID, String serviceName, double price, boolean status, int durationTime) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
         this.price = price;
         this.status = status;
         this.durationTime = durationTime;
-        this.discount = discount;
-        this.cateID = cateID;
     }
 
     public String getId() {
@@ -78,19 +73,14 @@ public class Service {
         this.durationTime = durationTime;
     }
 
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public String getCateID() {
-        return cateID;
-    }
-
-    public void setCateID(String cateID) {
-        this.cateID = cateID;
+    @Override
+    public String toString() {
+        return "Service{" +
+                " serviceID='" + serviceID + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", durationTime=" + durationTime +
+                '}';
     }
 }

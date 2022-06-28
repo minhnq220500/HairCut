@@ -23,12 +23,16 @@ public class Appointment {
     private Date startTime;
     private String empEmail;
     private List<Service> listService;
+    private Date createDate;
+    private String discountCode;
+    private boolean feedbacked;
 
     public Appointment() {
     }
 
-    public Appointment(String id, String apptID, String status, Date date, String description, String cusEmail, double totalPrice, int totalDuration, Date startTime, String empEmail, List<Service> listService) {
-        this.id = id;
+    public Appointment(String apptID, String status, Date date, String description,
+                       String cusEmail, double totalPrice, int totalDuration, Date startTime,
+                       String empEmail, List<Service> listService, Date createDate, String discountCode, boolean feedbacked) {
         this.apptID = apptID;
         this.status = status;
         this.date = date;
@@ -39,6 +43,17 @@ public class Appointment {
         this.startTime = startTime;
         this.empEmail = empEmail;
         this.listService = listService;
+        this.createDate = createDate;
+        this.discountCode = discountCode;
+        this.feedbacked = feedbacked;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getApptID() {
@@ -119,5 +134,29 @@ public class Appointment {
 
     public void setListService(List<Service> listService) {
         this.listService = listService;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getDiscountCode() {
+        return discountCode;
+    }
+
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
+    }
+
+    public boolean isFeedbacked() {
+        return feedbacked;
+    }
+
+    public void setFeedbacked(boolean feedbacked) {
+        this.feedbacked = feedbacked;
     }
 }

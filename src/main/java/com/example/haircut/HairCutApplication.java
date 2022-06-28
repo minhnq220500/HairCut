@@ -6,11 +6,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class HairCutApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HairCutApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init(){
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     @Bean
@@ -21,7 +29,7 @@ public class HairCutApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://127.0.0.1:5500",
-                                "https://haircut-fall-2021.herokuapp.com",
+                                "https://hair-cut.herokuapp.com/",
                                 "http://localhost:8080");
             }
         };

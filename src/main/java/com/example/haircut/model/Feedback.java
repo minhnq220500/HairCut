@@ -8,7 +8,7 @@ public class Feedback {
     @Id
     private String id;
     private String feedbackID;
-    private String rating;
+    private double rating;
     private String comment;
     private String cusEmail;
     private String apptID;
@@ -16,7 +16,7 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(String feedbackID, String rating, String comment, String cusEmail, String apptID) {
+    public Feedback(String feedbackID, double rating, String comment, String cusEmail, String apptID) {
         this.feedbackID = feedbackID;
         this.rating = rating;
         this.comment = comment;
@@ -32,11 +32,11 @@ public class Feedback {
         this.feedbackID = feedbackID;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 

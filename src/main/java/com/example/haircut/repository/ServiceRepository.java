@@ -10,5 +10,7 @@ public interface ServiceRepository extends MongoRepository<Service, String> {
 
     List<Service> findByStatus(Boolean status);
 
-    List<Service> findByCateID(String cateID);
+    Service findServiceByServiceName(String name);
+
+    Service findTopByOrderByIdDesc();
 }
